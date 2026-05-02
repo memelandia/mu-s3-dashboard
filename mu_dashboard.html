@@ -942,6 +942,163 @@ body {
 .no-results { text-align: center; padding: 80px 20px; color: var(--text3); }
 .no-results .nr-icon { font-size: 3.5rem; margin-bottom: 16px; filter: drop-shadow(0 0 6px rgba(240,192,64,0.2)); }
 .no-results .nr-text { font-size: 1rem; color: var(--text3); font-family: 'Nunito', sans-serif; font-weight: 600; }
+
+/* ── NEW: COLLAPSIBLE SIDEBAR ── */
+.sidebar { transition: width 0.25s ease, min-width 0.25s ease; }
+.sidebar.collapsed { width: 52px; min-width: 52px; overflow-x: hidden; }
+.sidebar-toggle {
+  width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border);
+  color: var(--text3); font-size: 0.85rem; padding: 10px 0; cursor: pointer; text-align: center;
+  letter-spacing: 1px; transition: all 0.2s; font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  display: block;
+}
+.sidebar-toggle:hover { color: var(--gold); background: rgba(240,192,64,0.05); }
+.sidebar.collapsed .sidebar-item > span:not(.icon) { display: none; }
+.sidebar.collapsed .sidebar-badge { display: none; }
+.sidebar.collapsed .sidebar-title { display: none; }
+.sidebar.collapsed .sidebar-item { justify-content: center; padding: 10px 0; }
+.sidebar.collapsed .sidebar-item.active::after { display: none; }
+.sidebar.collapsed .sidebar-item-progress { display: none; }
+
+/* ── NEW: STATUS BAR ── */
+#status-bar {
+  background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 36px; height: 28px;
+  display: flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; color: var(--text3); position: relative; z-index: 99; white-space: nowrap; overflow: hidden;
+}
+#status-bar .sb-breadcrumb { color: var(--text2); font-weight: 600; }
+#status-bar .sb-sep { color: var(--border2); }
+#status-bar .sb-pct { color: var(--gold); font-weight: 700; }
+#status-bar .sb-stat { display: flex; align-items: center; gap: 3px; }
+#status-bar .sb-stat.done { color: var(--green2); }
+#status-bar .sb-stat.wip { color: var(--blue2); }
+#status-bar .sb-stat.pending { color: var(--gold); }
+#status-bar .sb-right { margin-left: auto; display: flex; gap: 14px; }
+
+/* ── NEW: SIDEBAR MINI PROGRESS ── */
+.sidebar-item-progress {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: var(--border); overflow: hidden; border-radius: 0; pointer-events: none;
+}
+.sidebar-item-progress-fill { height: 100%; border-radius: 0; transition: width 0.4s ease; }
+
+/* ── NEW: TOAST SYSTEM ── */
+#toast-container {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  background: var(--bg3); border-radius: 8px; padding: 12px 18px;
+  font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 700; min-width: 220px; max-width: 320px;
+  pointer-events: auto; opacity: 0; display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: toast-in 0.25s ease forwards;
+}
+.toast.toast-out { animation: toast-out 0.3s ease forwards; }
+.toast.success { border: 1px solid rgba(34,221,122,0.4); color: var(--green2); }
+.toast.error   { border: 1px solid rgba(255,77,77,0.4);  color: var(--red2); }
+.toast.info    { border: 1px solid rgba(240,192,64,0.4); color: var(--gold2); }
+@keyframes toast-in  { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toast-out { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
+
+/* ── NEW: KEYBOARD SHORTCUT LEGEND ── */
+.kbd-help-btn {
+  background: rgba(240,192,64,0.08); border: 1px solid var(--border2); color: var(--text3);
+  width: 28px; height: 28px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; position: relative;
+  font-family: 'Nunito', sans-serif; transition: all 0.2s;
+}
+.kbd-help-btn:hover { color: var(--gold); border-color: var(--gold); }
+.kbd-legend {
+  position: absolute; top: calc(100% + 8px); right: 0; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 8px; padding: 12px 16px; min-width: 240px;
+  display: none; z-index: 200; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+.kbd-help-btn:hover .kbd-legend, .kbd-help-btn:focus .kbd-legend { display: block; }
+.kbd-legend-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 0; font-size: 0.78rem; color: var(--text2); font-family: 'Nunito', sans-serif;
+}
+.kbd-legend-row + .kbd-legend-row { border-top: 1px solid var(--border); }
+.kbd-tag {
+  background: var(--bg4); border: 1px solid var(--border2); border-radius: 4px;
+  padding: 2px 6px; font-size: 0.7rem; color: var(--text3); font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+}
+
+/* ── NEW: CARD QUICK-CHANGE ── */
+.card-quick-actions { display: flex; align-items: center; gap: 3px; opacity: 0; transition: opacity 0.2s; margin-right: 6px; }
+.card-header:hover .card-quick-actions { opacity: 1; }
+.qa-btn {
+  width: 26px; height: 26px; border-radius: 5px; border: 1px solid var(--border2);
+  background: var(--bg4); cursor: pointer; font-size: 0.75rem;
+  display: flex; align-items: center; justify-content: center; transition: all 0.15s; color: var(--text3);
+}
+.qa-btn:hover { transform: scale(1.1); }
+.qa-btn.qa-done:hover    { background: rgba(34,221,122,0.2);  border-color: var(--green2); color: var(--green2); }
+.qa-btn.qa-wip:hover     { background: rgba(56,178,245,0.2);  border-color: var(--blue2);  color: var(--blue2); }
+.qa-btn.qa-pending:hover { background: rgba(240,192,64,0.15); border-color: var(--gold);   color: var(--gold); }
+.qa-btn.qa-skip:hover    { background: rgba(90,98,120,0.2);   border-color: var(--text3);  color: var(--text3); }
+
+/* ── NEW: GROUP COLLAPSE ── */
+.group-collapse-btn {
+  margin-left: auto; background: transparent; border: none; color: var(--text3);
+  cursor: pointer; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; transition: all 0.15s;
+}
+.group-collapse-btn:hover { color: var(--gold); background: rgba(240,192,64,0.1); }
+.group-container.collapsed { display: none; }
+
+/* ── NEW: COMPACT VIEW ── */
+.view-compact .card { margin-bottom: 4px; }
+.view-compact .card-header { padding: 8px 12px; }
+.view-compact .card-title { font-size: 0.88rem; }
+.view-compact .card-body { display: none !important; }
+.view-compact .card-expand { display: none; }
+.view-compact .card-desc-preview { display: none; }
+.view-toggle-group { display: flex; gap: 0; border: 1px solid var(--border2); border-radius: 6px; overflow: hidden; }
+.view-toggle-btn {
+  background: transparent; border: none; color: var(--text3); padding: 5px 10px;
+  cursor: pointer; font-size: 0.8rem; font-family: 'Nunito', sans-serif; font-weight: 700; transition: all 0.15s;
+}
+.view-toggle-btn:hover { background: var(--bg4); color: var(--text2); }
+.view-toggle-btn.active { background: var(--gold); color: #080b10; }
+
+/* ── NEW: PRIORITY BADGES ── */
+.priority-dot {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  margin-right: 2px; flex-shrink: 0; vertical-align: middle;
+}
+.priority-dot.high   { background: var(--red2);      box-shadow: 0 0 4px rgba(255,77,77,0.5); }
+.priority-dot.medium { background: var(--gold);       box-shadow: 0 0 4px rgba(240,192,64,0.4); }
+.priority-dot.low    { background: var(--text-muted); }
+.filter-btn.priority-filter { border-style: dashed; }
+
+/* ── NEW: SECTION TRANSITION ANIMATION ── */
+@keyframes section-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.section-panel.active { animation: section-in 0.2s ease; }
+
+/* ── NEW: DONE CARD OVERLAY ── */
+.done-card { position: relative; }
+.done-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(-45deg, transparent, transparent 20px, rgba(34,221,122,0.015) 20px, rgba(34,221,122,0.015) 21px);
+  pointer-events: none; border-radius: inherit;
+}
+.done-card .card-title { opacity: 0.65; }
+
+/* ── NEW: RESPONSIVE BREAKPOINT ── */
+@media (max-width: 900px) {
+  .sidebar { width: 52px !important; min-width: 52px; overflow-x: hidden; }
+  .sidebar .sidebar-item > span:not(.icon) { display: none; }
+  .sidebar .sidebar-badge { display: none; }
+  .sidebar .sidebar-title { display: none; }
+  .sidebar .sidebar-item { justify-content: center; padding: 10px 0; }
+  .sidebar .sidebar-item.active::after { display: none; }
+  .info-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .search-bar { flex-wrap: wrap; }
+  .search-input { width: 100%; order: -1; }
+  .export-btn .btn-label { display: none; }
+  #status-bar { padding: 0 16px; }
+  .main-content { padding: 20px 16px; }
+}
 </style>
 </head>
 <body>
@@ -957,10 +1114,30 @@ body {
   <div class="header-right">
     <div class="autosave-dot" id="autosaveDot" title="Cambios sin guardar..."></div>
     <span class="save-indicator" id="saveIndicator">✓ Guardado</span>
-    <button class="export-btn" onclick="exportNotes()" title="Exportar todas las notas como .txt">📤 Exportar Notas</button>
+    <button class="export-btn" onclick="exportNotes()" title="Exportar todas las notas como .txt">📤 <span class="btn-label">Exportar Notas</span></button>
     <button class="save-btn" onclick="saveAll()">💾 Guardar Todo</button>
+    <div class="kbd-help-btn" tabindex="0">?
+      <div class="kbd-legend">
+        <div class="kbd-legend-row"><span>Buscar</span><span class="kbd-tag">Ctrl+K</span></div>
+        <div class="kbd-legend-row"><span>Guardar</span><span class="kbd-tag">Ctrl+S</span></div>
+        <div class="kbd-legend-row"><span>Exportar</span><span class="kbd-tag">Ctrl+⇧+E</span></div>
+        <div class="kbd-legend-row"><span>Limpiar / Colapsar</span><span class="kbd-tag">Esc</span></div>
+      </div>
+    </div>
   </div>
 </header>
+
+<div id="status-bar">
+  <span class="sb-breadcrumb" id="sb-breadcrumb">🎮 Overview</span>
+  <span class="sb-sep">|</span>
+  <span>Global:</span>
+  <span class="sb-pct" id="sb-global-pct">0%</span>
+  <div class="sb-right">
+    <span class="sb-stat done">✓ <span id="sb-count-done">0</span> listo</span>
+    <span class="sb-stat wip">🔵 <span id="sb-count-wip">0</span> proceso</span>
+    <span class="sb-stat pending">⚡ <span id="sb-count-pending">0</span> pendiente</span>
+  </div>
+</div>
 
 <div class="search-bar">
   <input class="search-input" type="text" placeholder="🔍  Buscar función, variable, etapa..." id="globalSearch" oninput="doSearch(this.value)">
@@ -972,7 +1149,14 @@ body {
   <button class="filter-btn" onclick="setFilter('server',this)">🖥 Server</button>
   <button class="filter-btn" onclick="setFilter('client',this)">🖼 Cliente</button>
   <button class="filter-btn pending-only" id="pendingOnlyBtn" onclick="filterPendingOnly(this)" title="Mostrar solo tareas pendientes o en proceso">⚡ Solo pendientes</button>
+  <button class="filter-btn priority-filter" onclick="setFilter('priority-high',this)" title="Alta prioridad">🔴 Alta</button>
+  <button class="filter-btn priority-filter" onclick="setFilter('priority-medium',this)" title="Media prioridad">🟡 Media</button>
+  <button class="filter-btn priority-filter" onclick="setFilter('priority-low',this)" title="Baja prioridad">⚪ Baja</button>
   <span class="search-count" id="searchCount"></span>
+  <div class="view-toggle-group" style="margin-left:4px;">
+    <button class="view-toggle-btn active" data-mode="list" onclick="toggleViewMode('list')" title="Vista lista">≡</button>
+    <button class="view-toggle-btn" data-mode="compact" onclick="toggleViewMode('compact')" title="Vista compacta">⊞</button>
+  </div>
 </div>
 
 <div class="main-tabs">
@@ -984,7 +1168,8 @@ body {
 <div class="content">
   <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
-    <!-- populated by JS -->
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Colapsar / Expandir sidebar">«</button>
+    <div id="sidebar-items"></div>
   </nav>
 
   <main class="main-content">
@@ -1804,10 +1989,8 @@ function saveAll() {
   try {
     localStorage.setItem('mu_dashboard_v2', JSON.stringify(state));
     hideUnsaved();
-    const ind = document.getElementById('saveIndicator');
-    ind.style.display = 'inline';
-    setTimeout(() => ind.style.display = 'none', 2500);
-  } catch(e) { alert('Error al guardar: ' + e.message); }
+    showToast('✓ Guardado', 'success');
+  } catch(e) { showToast('✕ Error al guardar', 'error'); }
 }
 
 function getItemState(id) {
@@ -1832,6 +2015,13 @@ function setItemNotes(id, notes) {
 // RENDER ENGINE
 // ═══════════════════════════════════════════════════
 
+function getItemPriority(item) {
+  if ((state[item.id]||{}).priority) return state[item.id].priority;
+  const tags = item.tags || [];
+  if (tags.some(t => ['critical','security','lanzamiento'].includes(t))) return 'high';
+  return '';
+}
+
 function makeCard(item, extra) {
   const s = getItemState(item.id);
   const status = s.status || 'pending';
@@ -1839,6 +2029,8 @@ function makeCard(item, extra) {
   const cardClass = {done:'done-card',wip:'wip-card',skip:'skip-card',pending:'pending-card',critical:(item.tags||[]).includes('critical')?'critical-card':'pending-card'}[status] || 'pending-card';
   const checkClass = {done:'checked',wip:'wip',skip:'skip'}[status] || '';
   const checkIcon = {done:'✓',wip:'◐',skip:'✕'}[status] || '';
+  const priority = getItemPriority(item);
+  const priorityDot = priority ? `<span class="priority-dot ${priority}" title="Prioridad ${priority}"></span>` : '';
 
   const tags = (item.tags||[]).map(t => `<span class="status-badge sb-${t}">${t}</span>`).join('');
   const statusBadge = `<span class="status-badge sb-${status}">${{done:'✓ listo',wip:'en proceso',skip:'no usar',pending:'pendiente'}[status]||status}</span>`;
@@ -1866,14 +2058,20 @@ function makeCard(item, extra) {
   let fileHtml = '';
   if (item.file) fileHtml = `<div style="font-size:0.75rem;color:var(--gold);margin-top:8px;font-family:'JetBrains Mono',monospace;">📄 ${item.file}</div>`;
 
-  return `<div class="card ${cardClass}" id="card-${item.id}" data-id="${item.id}" data-tags="${(item.tags||[]).join(',')}" data-status="${status}">
+  return `<div class="card ${cardClass}" id="card-${item.id}" data-id="${item.id}" data-tags="${(item.tags||[]).join(',')}" data-status="${status}" data-priority="${priority}">
     <div class="card-header" onclick="toggleCard('${item.id}')">
       <div class="card-check ${checkClass}" onclick="event.stopPropagation();cycleStatus('${item.id}')" title="Click para cambiar estado">${checkIcon}</div>
       <div style="flex:1;min-width:0;">
         <div class="card-title ${status==='skip'?'strikethrough':''}">${item.title}</div>
         ${descPreview}
       </div>
-      <div class="card-meta">${tags}${statusBadge}</div>
+      <div class="card-meta">${priorityDot}${tags}${statusBadge}</div>
+      <div class="card-quick-actions">
+        <button class="qa-btn qa-done" onclick="event.stopPropagation();setCardStatus('${item.id}','done')" title="Marcar listo">✓</button>
+        <button class="qa-btn qa-wip" onclick="event.stopPropagation();setCardStatus('${item.id}','wip')" title="En proceso">◎</button>
+        <button class="qa-btn qa-pending" onclick="event.stopPropagation();setCardStatus('${item.id}','pending')" title="Pendiente">○</button>
+        <button class="qa-btn qa-skip" onclick="event.stopPropagation();setCardStatus('${item.id}','skip')" title="No usar">—</button>
+      </div>
       <div class="card-expand" id="exp-${item.id}">▼</div>
     </div>
     <div class="card-body" id="body-${item.id}">
@@ -2018,7 +2216,7 @@ function updateAllStats() {
   const pctEl = document.getElementById('main-pct');
   if (fill) fill.style.width = pct + '%';
   if (pctEl) pctEl.textContent = `${doneAll}/${totalAll} — ${pct}%`;
-  // Update sidebar badges
+  // Update sidebar badges and mini progress bars
   Object.values(SIDEBAR_CONFIG).flat().forEach(item => {
     const badge = document.getElementById('sbbadge-' + item.id);
     if (!badge) return;
@@ -2027,7 +2225,14 @@ function updateAllStats() {
     const d = secItems.filter(i => (state[i.id]||{}).status === 'done').length;
     badge.textContent = `${d}/${secItems.length}`;
     badge.className = d === secItems.length ? 'sidebar-badge badge-done' : 'sidebar-badge badge-count';
+    const progFill = document.getElementById('sbprog-' + item.id);
+    if (progFill) {
+      const pct = Math.round((d/secItems.length)*100);
+      progFill.style.width = pct + '%';
+      progFill.style.background = pct === 100 ? 'var(--green2)' : pct > 0 ? 'var(--gold)' : 'var(--border2)';
+    }
   });
+  updateStatusBar();
 }
 
 // ═══════════════════════════════════════════════════
@@ -2042,6 +2247,7 @@ function copyCode(btn, codeId) {
     navigator.clipboard.writeText(text).then(() => {
       btn.textContent = '\u2713 Copiado'; btn.classList.add('copied');
       setTimeout(() => { btn.innerHTML = '&#10697; Copiar'; btn.classList.remove('copied'); }, 2000);
+      showToast('✓ Código copiado', 'info');
     }).catch(() => fallbackCopy(btn, text));
   } else { fallbackCopy(btn, text); }
 }
@@ -2054,6 +2260,7 @@ function fallbackCopy(btn, text) {
   document.body.removeChild(ta);
   btn.textContent = '\u2713 Copiado'; btn.classList.add('copied');
   setTimeout(() => { btn.innerHTML = '&#10697; Copiar'; btn.classList.remove('copied'); }, 2000);
+  showToast('✓ Código copiado', 'info');
 }
 
 function showUnsaved() {
@@ -2103,6 +2310,7 @@ function exportNotes() {
   a.href = url; a.download = 'mu-s3-notas-' + new Date().toISOString().split('T')[0] + '.txt';
   document.body.appendChild(a); a.click();
   document.body.removeChild(a); URL.revokeObjectURL(url);
+  showToast('✓ Notas exportadas', 'success');
 }
 
 function getSectionItems(secId) {
@@ -2165,20 +2373,25 @@ function switchTab(tab, el) {
 }
 
 function renderSidebar(tab) {
-  const sb = document.getElementById('sidebar');
+  const sb = document.getElementById('sidebar-items');
   const items = SIDEBAR_CONFIG[tab] || [];
   sb.innerHTML = items.map(item => {
     const secItems = getSectionItems(item.id);
     let badgeHtml = '';
+    let progressHtml = '';
     if (secItems.length > 0) {
       const done = secItems.filter(i => (state[i.id]||{}).status === 'done').length;
       badgeHtml = `<span class="sidebar-badge ${done===secItems.length?'badge-done':'badge-count'}" id="sbbadge-${item.id}">${done}/${secItems.length}</span>`;
+      const pct = Math.round((done/secItems.length)*100);
+      const fillColor = pct === 100 ? 'var(--green2)' : pct > 0 ? 'var(--gold)' : 'var(--border2)';
+      progressHtml = `<div class="sidebar-item-progress"><div class="sidebar-item-progress-fill" id="sbprog-${item.id}" style="width:${pct}%;background:${fillColor};"></div></div>`;
     }
     return `
     <div class="sidebar-item ${item.id===currentSection?'active':''}" id="sb-${item.id}" onclick="switchSection('${item.id}')">
       <span class="icon">${item.icon}</span>
       <span>${item.label}</span>
       ${badgeHtml}
+      ${progressHtml}
     </div>`;
   }).join('');
 }
@@ -2213,6 +2426,10 @@ function doSearch(query) {
       matchF = status === 'pending' || status === 'wip';
     } else if (currentFilter !== 'all') {
       if (['pending','wip','done','skip'].includes(currentFilter)) matchF = status === currentFilter;
+      else if (currentFilter.startsWith('priority-')) {
+        const pri = currentFilter.replace('priority-','');
+        matchF = (card.dataset.priority || '') === pri;
+      }
       else matchF = tags.includes(currentFilter);
     }
     const show = matchQ && matchF;
@@ -2243,14 +2460,169 @@ function filterPendingOnly(btn) {
 }
 
 // ═══════════════════════════════════════════════════
+// NEW FEATURES
+// ═══════════════════════════════════════════════════
+
+// ── NEW: COLLAPSIBLE SIDEBAR ──
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('sidebarToggle');
+  const collapsed = sb.classList.toggle('collapsed');
+  btn.textContent = collapsed ? '»' : '«';
+  try { localStorage.setItem('mu_dash_sidebar_collapsed', collapsed ? '1' : '0'); } catch(e) {}
+}
+
+// ── NEW: STATUS BAR ──
+function updateStatusBar() {
+  const allItems = [
+    ...Object.values(PROYECTO_ETAPAS).flat(),
+    ...EQUIPO_DATA, ...MONETIZACION_DATA, ...UPDATES_DATA, ...SERVER_CFG_DATA,
+    ...CLIENT_CFG_DATA, ...SECURITY_DATA, ...EVENTS_DATA, ...OFFLINE_DATA,
+    ...ECONOMY_DATA, ...DISCORD_DATA, ...RECS_DATA
+  ];
+  const total = allItems.length;
+  const done = allItems.filter(i => (state[i.id]||{}).status === 'done').length;
+  const wip  = allItems.filter(i => (state[i.id]||{}).status === 'wip').length;
+  const pend = allItems.filter(i => { const s = (state[i.id]||{}).status || 'pending'; return s === 'pending'; }).length;
+  const pct  = total > 0 ? Math.round(done/total*100) : 0;
+  const breadcrumb = document.getElementById('sb-breadcrumb');
+  if (breadcrumb) {
+    const cfg = Object.values(SIDEBAR_CONFIG).flat().find(c => c.id === currentSection);
+    breadcrumb.textContent = cfg ? cfg.icon + ' ' + cfg.label : currentSection;
+  }
+  const pctEl   = document.getElementById('sb-global-pct');   if (pctEl)  pctEl.textContent  = pct + '%';
+  const doneEl  = document.getElementById('sb-count-done');    if (doneEl) doneEl.textContent  = done;
+  const wipEl   = document.getElementById('sb-count-wip');     if (wipEl)  wipEl.textContent   = wip;
+  const pendEl  = document.getElementById('sb-count-pending'); if (pendEl) pendEl.textContent  = pend;
+}
+
+// ── NEW: TOAST SYSTEM ──
+function showToast(message, type) {
+  type = type || 'success';
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  const icons = { success: '✓', error: '✕', info: 'ℹ' };
+  toast.innerHTML = '<span>' + (icons[type]||'✓') + '</span><span>' + message + '</span>';
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('toast-out');
+    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 350);
+  }, 2500);
+}
+
+// ── NEW: KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown', function(e) {
+  const isMac = navigator.platform.indexOf('Mac') !== -1;
+  const ctrl = isMac ? e.metaKey : e.ctrlKey;
+  if (ctrl && e.key === 'k') { e.preventDefault(); const s = document.getElementById('globalSearch'); if(s){s.focus();s.select();} return; }
+  if (ctrl && e.key === 's') { e.preventDefault(); saveAll(); return; }
+  if (ctrl && e.shiftKey && e.key === 'E') { e.preventDefault(); exportNotes(); return; }
+  if (e.key === 'Escape') {
+    const search = document.getElementById('globalSearch');
+    if (search && search.value) {
+      search.value = '';
+      doSearch('');
+      const allBtn = document.querySelector('.filter-btn');
+      if (allBtn) setFilter('all', allBtn);
+    } else {
+      document.querySelectorAll('.card-body.open').forEach(b => {
+        b.classList.remove('open');
+        const id = b.id.replace('body-','');
+        const exp = document.getElementById('exp-'+id);
+        if (exp) exp.classList.remove('open');
+      });
+    }
+  }
+});
+
+// ── NEW: CARD QUICK-CHANGE ──
+function setCardStatus(id, status) {
+  setItemStatus(id, status);
+}
+
+// ── NEW: GROUP COLLAPSE ──
+function getCollapsedGroups() {
+  try { return JSON.parse(localStorage.getItem('mu_dash_collapsed_groups') || '[]'); } catch(e) { return []; }
+}
+function saveCollapsedGroupsArr(arr) {
+  try { localStorage.setItem('mu_dash_collapsed_groups', JSON.stringify(arr)); } catch(e) {}
+}
+function toggleGroupContainer(grpId, tlId) {
+  const grp = document.getElementById(grpId);
+  const tl  = document.getElementById(tlId);
+  const btn = tl ? tl.querySelector('.group-collapse-btn') : null;
+  if (!grp) return;
+  const collapsed = grp.classList.toggle('collapsed');
+  if (btn) btn.innerHTML = collapsed ? '▶' : '▼';
+  const arr = getCollapsedGroups();
+  if (collapsed && arr.indexOf(grpId) === -1) arr.push(grpId);
+  else { const i = arr.indexOf(grpId); if(i>-1) arr.splice(i,1); }
+  saveCollapsedGroupsArr(arr);
+}
+function initGroupCollapse() {
+  const saved = getCollapsedGroups();
+  document.querySelectorAll('.timeline-item[id]').forEach(item => {
+    const grpId = 'grp-' + item.id.replace('tl-','');
+    const grpContainer = document.getElementById(grpId);
+    if (!grpContainer) return;
+    const label = item.querySelector('.group-label');
+    if (!label) return;
+    const btn = document.createElement('button');
+    btn.className = 'group-collapse-btn';
+    btn.innerHTML = '▼';
+    btn.title = 'Colapsar grupo';
+    const _grpId = grpId, _tlId = item.id;
+    btn.onclick = function(e) { e.stopPropagation(); toggleGroupContainer(_grpId, _tlId); };
+    label.appendChild(btn);
+    if (saved.indexOf(grpId) !== -1) {
+      grpContainer.classList.add('collapsed');
+      btn.innerHTML = '▶';
+    }
+  });
+}
+
+// ── NEW: COMPACT VIEW TOGGLE ──
+let currentViewMode = 'list';
+function toggleViewMode(mode) {
+  currentViewMode = mode;
+  const mc = document.querySelector('.main-content');
+  if (!mc) return;
+  mc.classList.toggle('view-compact', mode === 'compact');
+  mc.classList.toggle('view-list', mode === 'list');
+  try { localStorage.setItem('mu_dash_view_mode', mode); } catch(e) {}
+  document.querySelectorAll('.view-toggle-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+}
+
+// ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
   renderAll();
   renderSidebar('proyecto');
+  switchSection('sec-overview');
+  // Restore sidebar collapsed state
+  try {
+    if (localStorage.getItem('mu_dash_sidebar_collapsed') === '1') {
+      document.getElementById('sidebar').classList.add('collapsed');
+      document.getElementById('sidebarToggle').textContent = '»';
+    }
+  } catch(e) {}
+  // Restore view mode
+  try {
+    const savedMode = localStorage.getItem('mu_dash_view_mode');
+    if (savedMode) toggleViewMode(savedMode);
+  } catch(e) {}
+  // Init group collapse toggles
+  initGroupCollapse();
   setInterval(saveAll, 30000);
 });
 </script>
+
+<div id="toast-container"></div>
 </body>
 </html>
