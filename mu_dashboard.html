@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MU S3 — Dashboard de Proyecto & Louis Emulator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Nunito:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0d0f14;
+  --bg2: #131720;
+  --bg3: #181e2a;
+  --bg4: #1e2840;
+  --border: #1e2840;
+  --border2: #2a3550;
+  --gold: #d4a843;
+  --gold2: #e8c06a;
+  --gold3: #ffd88a;
+  --red: #c0392b;
+  --red2: #e74c3c;
+  --green: #1a7a4a;
+  --green2: #4caf7d;
+  --blue: #1a4a7a;
+  --blue2: #4a9eca;
+  --purple: #6c3483;
+  --purple2: #9b59b6;
+  --cyan: #1a6a7a;
+  --cyan2: #17a2b8;
+  --orange: #d35400;
+  --orange2: #e67e22;
+  --text: #e8dcc8;
+  --text2: #9aacbf;
+  --text3: #5a6478;
+  --glow: rgba(212,168,67,0.15);
+  --glow2: rgba(212,168,67,0.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(212,168,67,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(74,158,202,0.03) 0%, transparent 60%);
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: linear-gradient(135deg, rgba(13,15,20,0.97) 0%, rgba(19,23,32,0.97) 50%, rgba(16,20,28,0.97) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--gold);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 4px 30px rgba(212,168,67,0.12);
+}
+.site-header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--gold), var(--gold3), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  text-shadow: none;
+}
+.site-header .subtitle {
+  font-size: 0.75rem;
+  color: var(--text2);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: 2px;
+  font-family: 'Nunito', sans-serif;
+}
+.header-right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.save-btn {
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  color: #000;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px var(--glow2); }
+.export-btn {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  padding: 7px 16px;
+  border-radius: 4px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.export-btn:hover { background: var(--bg4); color: var(--gold2); border-color: var(--gold); }
+.save-indicator { font-size: 0.75rem; color: var(--green2); display:none; font-weight:600; }
+.autosave-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold2); display: none;
+  animation: blink-dot 1.2s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--gold2);
+  cursor: default;
+}
+@keyframes blink-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+/* ── SEARCH BAR ── */
+.search-bar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 32px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.search-input {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  width: 300px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,0.1); }
+.search-input::placeholder { color: var(--text3); }
+.filter-btn {
+  padding: 6px 13px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text2);
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.filter-btn:hover { background: var(--bg4); color: var(--text); }
+.filter-btn.active { background: var(--gold); color: #0d0f14; border-color: var(--gold); font-weight: 700; }
+.filter-btn.pending-only { color: var(--gold); border-color: rgba(212,168,67,0.4); }
+.filter-btn.pending-only.active { background: var(--gold); color: #0d0f14; }
+.search-count { color: var(--text2); font-size: 0.78rem; margin-left: auto; font-family: 'JetBrains Mono', monospace; }
+
+/* ── MAIN TABS ── */
+.main-tabs {
+  display: flex;
+  background: var(--bg2);
+  border-bottom: 2px solid var(--border);
+  padding: 0 32px;
+  gap: 0;
+}
+.main-tab {
+  padding: 14px 28px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  color: var(--text2);
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.main-tab:hover { color: var(--text); }
+.main-tab.active { color: var(--gold2); border-bottom-color: var(--gold2); }
+
+/* ── LAYOUT ── */
+.content {
+  display: flex;
+  min-height: calc(100vh - 140px);
+}
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 100px;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.sidebar-section { margin-bottom: 8px; }
+.sidebar-title {
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 12px 20px 6px;
+  font-weight: 600;
+}
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text2);
+  border-left: 3px solid transparent;
+  position: relative;
+  font-family: 'Nunito', sans-serif;
+}
+.sidebar-item:hover { background: var(--bg3); color: var(--text); }
+.sidebar-item.active { background: var(--bg4); color: var(--gold2); border-left-color: var(--gold2); }
+.sidebar-item.active::after { content: '◆'; font-size: 0.45rem; color: var(--gold2); position: absolute; right: 10px; opacity: 0.7; }
+.sidebar-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+.sidebar-badge {
+  margin-left: auto;
+  font-size: 0.65rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.badge-done { background: rgba(39,174,96,0.2); color: var(--green2); }
+.badge-pending { background: rgba(200,149,42,0.15); color: var(--gold2); }
+.badge-count { background: rgba(41,128,185,0.2); color: var(--blue2); }
+
+.main-content {
+  flex: 1;
+  padding: 28px 32px;
+  overflow-y: auto;
+}
+
+/* ── SECTIONS ── */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.section-panel { display: none; }
+.section-panel.active { display: block; }
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-icon {
+  font-size: 2rem;
+  line-height: 1;
+  padding-top: 4px;
+}
+.section-title h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold2);
+  letter-spacing: 2px;
+}
+.section-title p {
+  color: var(--text2);
+  font-size: 0.9rem;
+  margin-top: 4px;
+  font-weight: 400;
+  font-family: 'Nunito', sans-serif;
+}
+.section-stats {
+  margin-left: auto;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.stat-pill.done { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.3); color: var(--green2); }
+.stat-pill.pending { background: rgba(200,149,42,0.15); border: 1px solid rgba(200,149,42,0.3); color: var(--gold2); }
+.stat-pill.total { background: rgba(41,128,185,0.1); border: 1px solid rgba(41,128,185,0.25); color: var(--blue2); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border2); }
+.card.done-card { border-left: 3px solid var(--green2); }
+.card.pending-card { border-left: 3px solid var(--gold); }
+.card.skip-card { border-left: 3px solid var(--text3); opacity: 0.6; }
+.card.wip-card { border-left: 3px solid var(--blue2); }
+.card.critical-card { border-left: 3px solid var(--red2); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+}
+.card-check {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border: 2px solid var(--border2);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.75rem;
+}
+.card-check.checked { background: var(--green2); border-color: var(--green2); }
+.card-check.wip { background: var(--blue2); border-color: var(--blue2); }
+.card-check.skip { background: var(--text3); border-color: var(--text3); }
+.card-title {
+  flex: 1;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  font-family: 'Nunito', sans-serif;
+}
+.card-title.strikethrough { text-decoration: line-through; color: var(--text3); }
+.card-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.status-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.sb-done { background: rgba(39,174,96,0.2); color: var(--green2); }
+.sb-pending { background: rgba(200,149,42,0.15); color: var(--gold2); }
+.sb-wip { background: rgba(41,128,185,0.2); color: var(--blue2); }
+.sb-skip { background: rgba(100,100,100,0.2); color: var(--text3); }
+.sb-critical { background: rgba(231,76,60,0.2); color: var(--red2); }
+.sb-vip { background: rgba(155,89,182,0.2); color: var(--purple2); }
+.sb-server { background: rgba(23,162,184,0.2); color: var(--cyan2); }
+.sb-client { background: rgba(230,126,34,0.2); color: var(--orange2); }
+
+.card-expand { color: var(--text3); font-size: 0.8rem; transition: transform 0.2s; }
+.card-expand.open { transform: rotate(180deg); }
+
+.card-body {
+  display: none;
+  padding: 0 22px 22px 56px;
+  border-top: 1px solid var(--border);
+}
+.card-body.open { display: block; }
+
+.card-desc {
+  color: var(--text2);
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin-top: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  font-family: 'Nunito', sans-serif;
+}
+.code-block-wrapper {
+  position: relative;
+  margin: 12px 0;
+}
+.code-block {
+  background: #080a0e;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 14px 18px;
+  padding-right: 90px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #ffd88a;
+  line-height: 1.75;
+  overflow-x: auto;
+  white-space: pre;
+}
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.copy-btn:hover { background: var(--gold); color: #0d0f14; border-color: var(--gold); }
+.copy-btn.copied { background: var(--green2); color: #fff; border-color: var(--green2); }
+.card-variables {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.var-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 3px;
+  background: rgba(200,149,42,0.08);
+  border: 1px solid rgba(200,149,42,0.2);
+  color: var(--gold3);
+}
+
+/* ── NOTES AREA ── */
+.notes-area {
+  margin-top: 12px;
+}
+.notes-label {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.notes-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 72px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+.notes-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,0.08); }
+.notes-input::placeholder { color: var(--text3); font-style: italic; }
+
+/* ── STATUS CONTROLS ── */
+.status-controls {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.sc-btn {
+  font-size: 0.75rem;
+  padding: 5px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.sc-btn:hover { background: var(--bg4); }
+.sc-btn.sc-done:hover, .sc-btn.sc-done.active { background: rgba(39,174,96,0.25); border-color: var(--green2); color: var(--green2); }
+.sc-btn.sc-wip:hover, .sc-btn.sc-wip.active { background: rgba(41,128,185,0.25); border-color: var(--blue2); color: var(--blue2); }
+.sc-btn.sc-pending:hover, .sc-btn.sc-pending.active { background: rgba(200,149,42,0.2); border-color: var(--gold); color: var(--gold2); }
+.sc-btn.sc-skip:hover, .sc-btn.sc-skip.active { background: rgba(100,100,100,0.25); border-color: var(--text3); color: var(--text3); }
+
+/* ── GROUP CONTAINERS ── */
+.group-container { margin-bottom: 28px; }
+.group-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(200,149,42,0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.group-label::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar-wrapper {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+.progress-title { font-size: 0.8rem; color: var(--text2); margin-bottom: 10px; letter-spacing: 1px; }
+.progress-track {
+  background: var(--bg);
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold), var(--gold3), var(--gold2));
+  transition: width 0.6s ease;
+  box-shadow: 0 0 8px rgba(212,168,67,0.3);
+}
+.progress-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text2); }
+.progress-pct { font-family: 'JetBrains Mono', monospace; color: var(--gold2); font-weight: 600; }
+
+/* ── INFO GRID ── */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.info-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+}
+.info-card-title { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+.info-card-value { font-size: 1.3rem; font-weight: 700; color: var(--gold2); font-family: 'JetBrains Mono', monospace; }
+.info-card-sub { font-size: 0.8rem; color: var(--text2); margin-top: 3px; }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--border));
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg);
+}
+.timeline-item.done::before { background: var(--green2); }
+.timeline-item.wip::before { background: var(--blue2); box-shadow: 0 0 8px var(--blue2); animation: pulse 2s infinite; }
+.timeline-item.future::before { background: var(--text3); }
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 6px var(--blue2); }
+  50% { box-shadow: 0 0 14px var(--blue2); }
+}
+
+/* ── COST TABLE ── */
+.cost-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.cost-table th {
+  background: var(--bg4);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid var(--border2);
+}
+.cost-table td {
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.cost-table tr:hover td { background: var(--bg3); }
+.cost-value { font-family: 'JetBrains Mono', monospace; color: var(--gold2); }
+.cost-note { font-size: 0.78rem; color: var(--text2); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ── HIDDEN ── */
+.hidden { display: none !important; }
+.highlight { background: rgba(212,168,67,0.22) !important; border-radius: 3px; }
+
+/* ── ORNAMENT SEPARATOR ── */
+.group-label { position: relative; }
+.section-separator {
+  text-align: center;
+  color: var(--gold);
+  opacity: 0.4;
+  font-size: 0.75rem;
+  letter-spacing: 8px;
+  margin: 24px 0 16px;
+  user-select: none;
+}
+
+/* ── CARD DESCRIPTION PREVIEW ── */
+.card-desc-preview {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 480px;
+  font-family: 'Nunito', sans-serif;
+  display: block;
+}
+.card.expanded .card-desc-preview { display: none; }
+
+/* ── RECOMMENDATION BOX ── */
+.rec-box {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin: 10px 0;
+}
+.rec-box.rec-green { border-left-color: var(--green2); }
+.rec-box.rec-red { border-left-color: var(--red2); }
+.rec-box.rec-blue { border-left-color: var(--blue2); }
+.rec-title { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--gold2); margin-bottom: 6px; }
+.rec-title.rc-green { color: var(--green2); }
+.rec-title.rc-red { color: var(--red2); }
+.rec-title.rc-blue { color: var(--blue2); }
+.rec-text { font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
+
+/* ── BULK ACTIONS ── */
+.bulk-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.bulk-btn {
+  font-size: 0.78rem;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text2);
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.bulk-btn:hover { background: var(--bg4); color: var(--text); }
+.bulk-label { font-size: 0.78rem; color: var(--text3); }
+
+/* ── EMPTY MSG ── */
+.no-results { text-align: center; padding: 60px 20px; color: var(--text3); }
+.no-results .nr-icon { font-size: 3rem; margin-bottom: 16px; }
+.no-results .nr-text { font-size: 1rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <h1>⚔ MU ONLINE — CONTROL CENTER</h1>
+    <div class="subtitle">Season 3 Ep.2 · Louis Emulator Update 42 · BraveGirls Studio</div>
+  </div>
+  <div class="header-right">
+    <div class="autosave-dot" id="autosaveDot" title="Cambios sin guardar..."></div>
+    <span class="save-indicator" id="saveIndicator">✓ Guardado</span>
+    <button class="export-btn" onclick="exportNotes()" title="Exportar todas las notas como .txt">📤 Exportar Notas</button>
+    <button class="save-btn" onclick="saveAll()">💾 Guardar Todo</button>
+  </div>
+</header>
+
+<div class="search-bar">
+  <input class="search-input" type="text" placeholder="🔍  Buscar función, variable, etapa..." id="globalSearch" oninput="doSearch(this.value)">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todo</button>
+  <button class="filter-btn" onclick="setFilter('pending',this)">⏳ Pendiente</button>
+  <button class="filter-btn" onclick="setFilter('wip',this)">🔧 En proceso</button>
+  <button class="filter-btn" onclick="setFilter('done',this)">✅ Completado</button>
+  <button class="filter-btn" onclick="setFilter('skip',this)">🚫 No usar</button>
+  <button class="filter-btn" onclick="setFilter('server',this)">🖥 Server</button>
+  <button class="filter-btn" onclick="setFilter('client',this)">🖼 Cliente</button>
+  <button class="filter-btn pending-only" id="pendingOnlyBtn" onclick="filterPendingOnly(this)" title="Mostrar solo tareas pendientes o en proceso">⚡ Solo pendientes</button>
+  <span class="search-count" id="searchCount"></span>
+</div>
+
+<div class="main-tabs">
+  <div class="main-tab active" onclick="switchTab('proyecto',this)">📋 PROYECTO S3</div>
+  <div class="main-tab" onclick="switchTab('files',this)">⚙️ LOUIS EMULATOR FILES</div>
+  <div class="main-tab" onclick="switchTab('recomendaciones',this)">⭐ RECOMENDACIONES</div>
+</div>
+
+<div class="content">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <!-- populated by JS -->
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ══════════════════════════════════════════ TAB: PROYECTO ══════ -->
+    <div class="tab-content active" id="tab-proyecto">
+
+      <!-- OVERVIEW -->
+      <div class="section-panel active" id="sec-overview">
+        <div class="section-header">
+          <div class="section-icon">🎮</div>
+          <div class="section-title">
+            <h2>OVERVIEW DEL PROYECTO</h2>
+            <p>Servidor MU Online Season 3 Ep.2 — Engine Louis S6 con downgrade visual</p>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-card-title">Engine Base</div>
+            <div class="info-card-value">S6 Ep.3</div>
+            <div class="info-card-sub">Louis Emulator Update 42+</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">Visual</div>
+            <div class="info-card-value">S3 Ep.2</div>
+            <div class="info-card-sub">Interface S6 · Downgrade assets S3</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">Experience Rate</div>
+            <div class="info-card-value">100x</div>
+            <div class="info-card-sub">Medium-Slow · Sin MuHelper</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">Party Máximo</div>
+            <div class="info-card-value">5</div>
+            <div class="info-card-sub">Con bonus party por clases distintas</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">VPS Estimado</div>
+            <div class="info-card-value">$65/mes</div>
+            <div class="info-card-sub">OVH São Paulo · Anti-DDoS Game</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">Monetización</div>
+            <div class="info-card-value">P2W = 0</div>
+            <div class="info-card-sub">Solo VIP + XShop cosmético/consumible</div>
+          </div>
+        </div>
+
+        <div class="progress-bar-wrapper">
+          <div class="progress-title">PROGRESO GENERAL DEL PROYECTO</div>
+          <div class="progress-track"><div class="progress-fill" id="main-progress" style="width:0%"></div></div>
+          <div class="progress-labels"><span>0%</span><span class="progress-pct" id="main-pct">Calculando...</span><span>100%</span></div>
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-title">📌 CONCEPTO CENTRAL</div>
+          <div class="rec-text">Servidor S3 auténtico corriendo sobre el engine más estable de LatAm (Louis S6). La Summoner está disponible como clase especial con lore propio. El mundo visual es S3 pero con la fluidez y los sistemas modernos del S6. Sin MuHelper → el farming offline se ofrece como beneficio VIP (Off Attack / Off Helper). Economía basada en Zen y Joyas de Vida/Creación. XShop solo con WCoins recargables con USD — sin items que den ventaja en PvP.</div>
+        </div>
+
+        <div class="notes-area" style="margin-top:20px">
+          <div class="notes-label">📝 Notas generales del proyecto</div>
+          <textarea class="notes-input" id="note-overview" rows="4" placeholder="Escribe notas generales del proyecto aquí..."></textarea>
+        </div>
+      </div>
+
+      <!-- ETAPAS -->
+      <div class="section-panel" id="sec-etapas">
+        <div class="section-header">
+          <div class="section-icon">🗓</div>
+          <div class="section-title">
+            <h2>CRONOGRAMA — 4 MESES</h2>
+            <p>Etapas de desarrollo, configuración y lanzamiento</p>
+          </div>
+          <div class="section-stats" id="stats-etapas"></div>
+        </div>
+
+        <div class="bulk-actions">
+          <span class="bulk-label">Acciones rápidas:</span>
+          <button class="bulk-btn" onclick="expandAll('sec-etapas')">Expandir todo</button>
+          <button class="bulk-btn" onclick="collapseAll('sec-etapas')">Colapsar todo</button>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item future" id="tl-mes0">
+            <div class="group-label">MES 0 — INVERSIÓN INICIAL · Costo: ~$400 USD</div>
+          </div>
+        </div>
+
+        <div class="group-container" id="grp-mes0">
+          <!-- Mes 0 cards -->
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item future" id="tl-mes1">
+            <div class="group-label">MES 1 — SETUP Y CONFIGURACIÓN · VPS activo · Primeros Ads</div>
+          </div>
+        </div>
+        <div class="group-container" id="grp-mes1"></div>
+
+        <div class="timeline">
+          <div class="timeline-item future" id="tl-mes2">
+            <div class="group-label">MES 2 — ALPHA / CLOSED BETA · 1-2 Testers · Balance PvP</div>
+          </div>
+        </div>
+        <div class="group-container" id="grp-mes2"></div>
+
+        <div class="timeline">
+          <div class="timeline-item future" id="tl-mes3">
+            <div class="group-label">MES 3 — OPEN BETA · Stress test · Publicidad fuerte</div>
+          </div>
+        </div>
+        <div class="group-container" id="grp-mes3"></div>
+
+        <div class="timeline">
+          <div class="timeline-item future" id="tl-mes4">
+            <div class="group-label">MES 4 — GRAND OPENING · Viernes ~20:00hs · Meta: 100+ usuarios</div>
+          </div>
+        </div>
+        <div class="group-container" id="grp-mes4"></div>
+      </div>
+
+      <!-- INFRAESTRUCTURA -->
+      <div class="section-panel" id="sec-infra">
+        <div class="section-header">
+          <div class="section-icon">🖥</div>
+          <div class="section-title">
+            <h2>INFRAESTRUCTURA Y COSTOS</h2>
+            <p>Proveedores, VPS, licencias y herramientas necesarias</p>
+          </div>
+        </div>
+
+        <table class="cost-table">
+          <thead>
+            <tr><th>Componente</th><th>Proveedor</th><th>Costo</th><th>Tipo</th><th>Notas</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Files + Licencia Louis</td><td>jogandomu.com.br</td><td class="cost-value">$300</td><td>Pago único</td><td class="cost-note">GameServer + ConnectServer + Antihack MHP + Editor</td></tr>
+            <tr><td>VPS Game Server</td><td>OVH São Paulo</td><td class="cost-value">$65/mes</td><td>Mensual</td><td class="cost-note">DDoS Game en puerto 55901 · IP Brasilera = menor ping LatAm</td></tr>
+            <tr><td>Web Hosting</td><td>WebEngine CMS</td><td class="cost-value">$15/mes</td><td>Mensual</td><td class="cost-note">Windows + PHP + vinculación SQL Server</td></tr>
+            <tr><td>Diseño gráfico</td><td>JanoDesign (o similar)</td><td class="cost-value">$100</td><td>Pago único</td><td class="cost-note">Logo + Banner + Portada FB + Web Template</td></tr>
+            <tr><td>SQL Server 2014</td><td>Microsoft</td><td class="cost-value">$0</td><td>Developer/Express</td><td class="cost-note">Version Express es gratuita para uso en servidor</td></tr>
+            <tr><td>Dominio .com</td><td>Namecheap/GoDaddy</td><td class="cost-value">~$12/año</td><td>Anual</td><td class="cost-note">Necesario para credibilidad y web CMS</td></tr>
+          </tbody>
+        </table>
+
+        <div class="notes-area" style="margin-top:20px">
+          <div class="notes-label">📝 Notas de infraestructura</div>
+          <textarea class="notes-input" id="note-infra" rows="3" placeholder="Presupuesto disponible, decisiones tomadas, alternativas..."></textarea>
+        </div>
+      </div>
+
+      <!-- EQUIPO -->
+      <div class="section-panel" id="sec-equipo">
+        <div class="section-header">
+          <div class="section-icon">👥</div>
+          <div class="section-title">
+            <h2>EQUIPO DE TRABAJO</h2>
+            <p>Roles necesarios para que el servidor no dependa de una sola persona</p>
+          </div>
+        </div>
+        <div class="group-container" id="grp-equipo"></div>
+      </div>
+
+      <!-- MONETIZACIÓN -->
+      <div class="section-panel" id="sec-monetizacion">
+        <div class="section-header">
+          <div class="section-icon">💰</div>
+          <div class="section-title">
+            <h2>MONETIZACIÓN Y PAGOS</h2>
+            <p>Modelo Play2Win — XShop cosmético/utilidad. Sin items OP</p>
+          </div>
+        </div>
+        <div class="group-container" id="grp-monetizacion"></div>
+      </div>
+
+    </div>
+    <!-- ══════════════════════════════════════════ FIN TAB PROYECTO ══ -->
+
+    <!-- ══════════════════════════════════════════ TAB: FILES ══════════ -->
+    <div class="tab-content" id="tab-files">
+
+      <div class="section-panel active" id="sec-updates">
+        <div class="section-header">
+          <div class="section-icon">📦</div>
+          <div class="section-title">
+            <h2>HISTORIAL DE UPDATES LOUIS (1–42)</h2>
+            <p>Sistemas custom añadidos en cada versión — solo lo relevante</p>
+          </div>
+          <div class="section-stats" id="stats-updates"></div>
+        </div>
+        <div class="bulk-actions">
+          <button class="bulk-btn" onclick="expandAll('sec-updates')">Expandir todo</button>
+          <button class="bulk-btn" onclick="collapseAll('sec-updates')">Colapsar todo</button>
+        </div>
+        <div id="grp-updates"></div>
+      </div>
+
+      <div class="section-panel" id="sec-server-cfg">
+        <div class="section-header">
+          <div class="section-icon">⚙️</div>
+          <div class="section-title">
+            <h2>CONFIGURACIONES LADO SERVIDOR</h2>
+            <p>Variables y archivos .dat / .txt — GameServerInfo</p>
+          </div>
+          <div class="section-stats" id="stats-server"></div>
+        </div>
+        <div class="bulk-actions">
+          <button class="bulk-btn" onclick="expandAll('sec-server-cfg')">Expandir todo</button>
+          <button class="bulk-btn" onclick="collapseAll('sec-server-cfg')">Colapsar todo</button>
+        </div>
+        <div id="grp-server-cfg"></div>
+      </div>
+
+      <div class="section-panel" id="sec-client-cfg">
+        <div class="section-header">
+          <div class="section-icon">🖼</div>
+          <div class="section-title">
+            <h2>PERSONALIZACIÓN LADO CLIENTE</h2>
+            <p>Interface, visual, downgrade S3/S4, efectos, archivos .bmd</p>
+          </div>
+          <div class="section-stats" id="stats-client"></div>
+        </div>
+        <div class="bulk-actions">
+          <button class="bulk-btn" onclick="expandAll('sec-client-cfg')">Expandir todo</button>
+          <button class="bulk-btn" onclick="collapseAll('sec-client-cfg')">Colapsar todo</button>
+        </div>
+        <div id="grp-client-cfg"></div>
+      </div>
+
+      <div class="section-panel" id="sec-security">
+        <div class="section-header">
+          <div class="section-icon">🛡</div>
+          <div class="section-title">
+            <h2>ANTI-CHEAT Y SEGURIDAD</h2>
+            <p>Hack.dat · AntiFlood · AntiDupe · SpeedHack</p>
+          </div>
+        </div>
+        <div id="grp-security"></div>
+      </div>
+
+      <div class="section-panel" id="sec-events">
+        <div class="section-header">
+          <div class="section-icon">🎪</div>
+          <div class="section-title">
+            <h2>EVENTOS Y PVP</h2>
+            <p>Event.dat · Todos los eventos disponibles y configuraciones</p>
+          </div>
+          <div class="section-stats" id="stats-events"></div>
+        </div>
+        <div id="grp-events"></div>
+      </div>
+
+      <div class="section-panel" id="sec-offline">
+        <div class="section-header">
+          <div class="section-icon">🤖</div>
+          <div class="section-title">
+            <h2>SISTEMAS OFFLINE</h2>
+            <p>Off Attack · Off Store · Off Helper · Custom Pick</p>
+          </div>
+        </div>
+        <div id="grp-offline"></div>
+      </div>
+
+      <div class="section-panel" id="sec-economy">
+        <div class="section-header">
+          <div class="section-icon">💎</div>
+          <div class="section-title">
+            <h2>ECONOMÍA, DROPS Y JOYAS</h2>
+            <p>Rates · Bonus Manager · Online Reward · Custom Mix · Jewel Bank</p>
+          </div>
+        </div>
+        <div id="grp-economy"></div>
+      </div>
+
+      <div class="section-panel" id="sec-discord">
+        <div class="section-header">
+          <div class="section-icon">💬</div>
+          <div class="section-title">
+            <h2>INTEGRACIÓN DISCORD</h2>
+            <p>Discord.dat · Webhooks disponibles</p>
+          </div>
+        </div>
+        <div id="grp-discord"></div>
+      </div>
+
+    </div>
+    <!-- ══════════════════════════════════════════ FIN TAB FILES ════════ -->
+
+    <!-- ══════════════════════════════════════════ TAB: RECOMENDACIONES ═ -->
+    <div class="tab-content" id="tab-recomendaciones">
+      <div class="section-panel active" id="sec-recs">
+        <div class="section-header">
+          <div class="section-icon">⭐</div>
+          <div class="section-title">
+            <h2>RECOMENDACIONES PARA TU SERVIDOR S3</h2>
+            <p>Qué usar, qué evitar y cómo diferenciarte — basado en tu concepto</p>
+          </div>
+        </div>
+        <div id="grp-recs"></div>
+      </div>
+    </div>
+
+    <div id="no-results" class="no-results hidden">
+      <div class="nr-icon">🔍</div>
+      <div class="nr-text">No se encontraron resultados para tu búsqueda</div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA DEFINITIONS
+// ═══════════════════════════════════════════════════
+
+const PROYECTO_ETAPAS = {
+  'mes0': [
+    { id:'m0-1', title:'Comprar licencia Louis Emulator Update 42', tags:['server','critical'], desc:'Adquirir la licencia premium en jogandomu.com.br. Incluye GameServer, ConnectServer, Antihack MHP y herramientas de edición. Validez indefinida con pago único.' },
+    { id:'m0-2', title:'Contratar VPS OVH São Paulo', tags:['server'], desc:'VPS con protección DDoS Game específica para el puerto 55901. Es el único proveedor con mitigación especializada para servidores de juego en LatAm. Ubicación Brasil = menor latencia para Argentina/Chile/Perú.' },
+    { id:'m0-3', title:'Contratar Web Hosting (WebEngine CMS)', tags:['server'], desc:'Hosting Windows con soporte PHP para el sitio web y panel de administración. Necesario para la vinculación con la base de datos SQL Server del servidor.' },
+    { id:'m0-4', title:'Instalar SQL Server 2014/2019 en VPS', tags:['server','critical'], desc:'Instalar SQL Server Developer/Express en el VPS. CRÍTICO: bloquear el puerto 1433 en el firewall — solo permitir acceso desde el WebHost. Este es el error de seguridad más común que destruye servidores.' },
+    { id:'m0-5', title:'Contratar diseño gráfico pack lanzamiento', tags:['marketing'], desc:'Pack básico: Logo del servidor + Banner principal + Portada de Facebook + Template web. Presupuesto estimado $100 USD. Buscar diseñadores en comunidades MU Online LatAm.' },
+    { id:'m0-6', title:'Comprar dominio del servidor', tags:['web'], desc:'Comprar dominio .com del servidor. Necesario para el sitio web, registro de usuarios y credibilidad. Aprox $12 USD/año en Namecheap o similar.' },
+  ],
+  'mes1': [
+    { id:'m1-1', title:'Instalar y activar licencia Louis en VPS', tags:['server','critical'], desc:'Instalar el MuServer en el VPS, activar la licencia con el HardwareID del servidor. Verificar que GameServer, ConnectServer y DataServer inicien correctamente.' },
+    { id:'m1-2', title:'Configurar downgrade visual S3', tags:['client','server'], desc:'Desactivar MasterSkillTree, remover RF/Summoner del menú de creación normal, configurar inventario S3, deshabilitar el menú de movimiento (M), configurar interface S6 con assets S3.' },
+    { id:'m1-3', title:'Configurar rates base (EXP 100x, Drop, Zen)', tags:['server'], desc:'AddExperienceRate_AL0=100, ItemDropRate configurado, MoneyAmountDropRate, SoulSuccessRate, LifeSuccessRate, HarmonySuccessRate base. Verificar con personaje de prueba.' },
+    { id:'m1-4', title:'Configurar sistema de Resets', tags:['server'], desc:'CommandResetLevel=400, CommandResetMoney, CommandResetLimit, CommandResetStartLevel=1, CommandResetPoint. Configurar para que sea un logro progresivo en medium-slow.' },
+    { id:'m1-5', title:'Configurar mapas S3 originales', tags:['server'], desc:'Lorencia, Noria, Devias, Dungeon 1-3, Lost Tower 1-6, Atlans 1-3, Tarkan 1-2. Verificar gates, spawns de monstruos y drops en cada mapa.' },
+    { id:'m1-6', title:'Configurar Summoner como clase especial', tags:['server','client'], desc:'SUCreateType=1 (requiere item/card para crear). Crear NPC Quest con lore de la Summoner. Balancear stats de la Summoner para S3 ya que fue introducida en S4 originalmente.' },
+    { id:'m1-7', title:'Configurar Castle Siege', tags:['server'], desc:'CastleSiegeEvent=1, configurar ciclo semanal. Activar CastleSiegePointSwitch para el sistema moderno por puntos. Configurar horario: sábado o domingo.' },
+    { id:'m1-8', title:'Configurar Off Attack / Off Helper por VIP', tags:['server','vip'], desc:'Activar CustomAttack y CustomOffHelper. Free=0h, VIP1=4h/día, VIP2=12h/día, VIP3=ilimitado. CRÍTICO: desactivar MuHelper para FREE — CustomAttackTime_AL0=0.' },
+    { id:'m1-9', title:'Configurar AutoPick por VIP', tags:['server','vip'], desc:'CustomPickSwitch=1. Free: pick manual. VIP1: solo joyas (Bless/Soul/Chaos/Life). VIP2: joyas + excellent. VIP3: todo. Configurar CustomPickRequireLevel según progression.' },
+    { id:'m1-10', title:'Configurar sistema de VIP y XShop', tags:['server','monetizacion'], desc:'Configurar 3 niveles VIP con precios en USD vía MercadoPago/Crypto. XShop con Coin1 (WCoinC recargable con USD) para VIP, consumibles y cosméticos. Sin items que den ventaja en PvP.' },
+    { id:'m1-11', title:'Configurar Daily Reward', tags:['server'], desc:'CustomDailyRewardSwitch=1. Recompensas diarias de login: pociones, zen, WCoinP (nunca WCoinC). Niveles progresivos por días consecutivos.' },
+    { id:'m1-12', title:'Configurar Custom RankUser (Patentes)', tags:['server'], desc:'CustomRankUserSwitch=1, Type=0 (por resets). Definir escala: 0r=Novato, 5r=Escudero, 15r=Caballero, 30r=Paladín, 50r=Héroe, 80r=Leyenda. Activar anuncio global al subir de rango.' },
+    { id:'m1-13', title:'Conectar integración Discord', tags:['server'], desc:'DiscordServerActive=1. Webhooks: RankUser, Reset, CS Crown, Invasión inicio, Chaos Mix éxito. Crear canal #eventos-servidor en el Discord del server.' },
+    { id:'m1-14', title:'Configurar Anti-Cheat (Hack.dat)', tags:['server','security'], desc:'SpeedHackSkillType=4 (ban automático), AntiFloodActive=1, CheckHackDupeAutoBan=1. Verificar tolerancias antes del lanzamiento para evitar falsos positivos.' },
+    { id:'m1-15', title:'Configurar Backups automáticos cada 6h', tags:['server'], desc:'Script que copie la carpeta MuServer + base de datos SQL a Google Drive o MEGA cada 6 horas. Un fallo de BD puede destruir 2 meses de progreso de jugadores.' },
+    { id:'m1-16', title:'Configurar sitio web (WebEngine CMS)', tags:['web'], desc:'Instalar WebEngine, vincular con BD SQL, configurar registro de usuarios, ranking, tienda de WCoins, noticias. Activar SSL (HTTPS) para seguridad.' },
+    { id:'m1-17', title:'Primeros anuncios en Facebook/TikTok', tags:['marketing'], desc:'Publicar imágenes del servidor, anunciar la fecha de Open Beta. FB Ads básico: hombres 22-40 años, interesados en "MU Online", "juegos clásicos MMORPG". Presupuesto: $30-50 USD.' },
+  ],
+  'mes2': [
+    { id:'m2-1', title:'Invitar 1-2 beta testers externos con experiencia', tags:['testing'], desc:'Buscar jugadores old-school de comunidades MU LatAm (Facebook, Discord). Experiencia necesaria: conocimiento de balance S3, capacidad de reportar bugs específicos.' },
+    { id:'m2-2', title:'Testear balance PvP todas las clases', tags:['testing','balance'], desc:'Tabla de combinaciones: DK Combo vs FE Stump, DW vs DK, MG vs todos, Summoner vs todos. CRÍTICO en S3: el BK (DK) tiende a dominar. Usar DKDamageRatePvP para ajustar.' },
+    { id:'m2-3', title:'Testear drops en todos los mapas S3', tags:['testing'], desc:'Verificar que cada mapa dropee items correspondientes a su nivel. Lost Tower = Joyería buena. Atlans/Tarkan = items nivel alto. Confirmar rate de Excellent items.' },
+    { id:'m2-4', title:'Testear Castle Siege (prueba)', tags:['testing'], desc:'Usar CastleSiegeTestTime para hacer una prueba en 10 minutos. Verificar que los gates, statues, crown switch y el sistema de puntos funcionen correctamente.' },
+    { id:'m2-5', title:'Testear sistema de Resets y economía', tags:['testing'], desc:'Verificar que la economía Zen sea viable: el jugador debe poder vender items al NPC o entre jugadores para poder resetear. Confirmar que NO sea trivial llegar al primer reset.' },
+    { id:'m2-6', title:'Testear Off Attack y AutoPick por VIP', tags:['testing','vip'], desc:'Verificar que el Off Attack se detenga al vencer el VIP, que el AutoPick filtre correctamente según el nivel VIP, y que el Auto-resume funcione al reconectar.' },
+    { id:'m2-7', title:'Testear Blood Castle / Devil Square / Chaos Castle', tags:['testing'], desc:'Hacer todos los niveles de cada evento. Verificar entrada, drops, EXP y que los timers funcionen. Confirmar entry count limit por día funciona.' },
+    { id:'m2-8', title:'Balancear Summoner para entorno S3', tags:['balance'], desc:'La Summoner es originalmente S4. Ajustar SUDamageRatePvP y SUDamageRatePvM para que sea competitiva pero no dominante. Sus buffs al party deben ser su fortaleza principal.' },
+    { id:'m2-9', title:'Configurar Invasión Manager (Golden Dragon, etc.)', tags:['server'], desc:'InvasionManagerSwitch=1. Configurar Golden Dragon cada 3 horas en Lorencia. Drops de invasion: Jewel of Creation, Box of Kundun. Verificar NeedOnlinePlayers mínimo.' },
+    { id:'m2-10', title:'Configurar Bonus Manager (EXP Weekends)', tags:['server'], desc:'BonusManagerSwitch=1. Bonus +50% EXP viernes 20:00 a domingo 23:59. Anuncio automático al inicio y fin del bonus. Crear rutina de eventos semanales.' },
+    { id:'m2-11', title:'Configurar Custom NPC Quest (Summoner lore)', tags:['server'], desc:'Crear questline para desbloquear la Summoner: "La Summoner llegó de otro plano...". Quests: matar X criaturas de cada mundo, coleccionar items de lore. Recompensa: Carta de Summoner.' },
+    { id:'m2-12', title:'Reportar y corregir todos los bugs encontrados', tags:['testing'], desc:'Crear lista de bugs, priorizar por gravedad. Bugs críticos (dupe, crash) = fix inmediato. Bugs menores = fix antes del Open Beta.' },
+  ],
+  'mes3': [
+    { id:'m3-1', title:'Anuncio oficial de Open Beta con fecha', tags:['marketing'], desc:'Post con video/imágenes del servidor. Anunciar fecha exacta, horario, website. Crear evento de Facebook. Activar campaña de FB/Instagram Ads con $50-80 USD.' },
+    { id:'m3-2', title:'Open Beta — Abrir al público sin premios', tags:['lanzamiento'], desc:'Open Beta sin rewards permanentes. El objetivo es el stress test con usuarios reales. Anunciar claramente que habrá reset total antes del Grand Opening.' },
+    { id:'m3-3', title:'Stress test del servidor con jugadores reales', tags:['testing'], desc:'Monitorear: uso de CPU/RAM del VPS, latencia de jugadores, crashes del GameServer, comportamiento del SQL bajo carga. Objetivo: 50+ jugadores simultáneos sin lag.' },
+    { id:'m3-4', title:'Recopilar feedback de la comunidad', tags:['comunidad'], desc:'Discord activo con canal #feedback. Preguntar específicamente sobre: balance de clases, economía, eventos, bugs visuales, experiencia de leveling.' },
+    { id:'m3-5', title:'Ajustes post-Open Beta', tags:['balance'], desc:'Aplicar correcciones de balance basadas en el feedback y los datos reales de la Beta. Ajustar rates de EXP si el progression es muy rápido o muy lento.' },
+    { id:'m3-6', title:'Duplicar presupuesto de publicidad ($120 USD)', tags:['marketing'], desc:'Escalar las campañas de FB/Instagram Ads exitosas. Agregar TikTok Ads si el contenido tuvo engagement. Target: hombres 20-40 años, LatAm, juegos MMORPG clásicos.' },
+    { id:'m3-7', title:'Preparar contenido de lanzamiento para Discord/RRSS', tags:['marketing'], desc:'Videos de gameplay, screenshots de CS, clips de invasiones. Contar con al menos 200 miembros en el Discord antes del Grand Opening.' },
+    { id:'m3-8', title:'Configurar Guild Shop y Castle Siege como endgame', tags:['server'], desc:'Activar CustomGuildShopSwitch=1 con puntos de CS, kills, resets. Configurar Custom Flag System para el guild ganador de CS. Estos sistemas son el endgame de S3.' },
+  ],
+  'mes4': [
+    { id:'m4-1', title:'Reset total de la base de datos (post-Beta)', tags:['lanzamiento','critical'], desc:'Borrar todos los personajes, cuentas, guilds y datos de la Beta. Restaurar desde el backup inicial limpio. CRÍTICO: confirmar que los archivos de config NO se borren.' },
+    { id:'m4-2', title:'Grand Opening — Viernes ~20:00hs', tags:['lanzamiento'], desc:'Iniciar con anuncio en Discord, RRSS. Meta: 50+ jugadores en la primera hora. Tener al Admin y GM online para responder dudas y monitorear. Stream en vivo si es posible.' },
+    { id:'m4-3', title:'GM activo 4-6h/día la primera semana', tags:['comunidad'], desc:'Eventos manuales: búsqueda del tesoro, lluvia de Bless, preguntas y respuestas. Presencia visible del staff genera confianza y retención en los primeros días.' },
+    { id:'m4-4', title:'Primer Castle Siege del servidor', tags:['evento'], desc:'Primera CS del servidor — evento más importante del S3. Anunciarlo 72h antes en Discord. Streamear o grabarlo para RRSS. Usar CastleSiegeRankingEnable para mostrar en cliente.' },
+    { id:'m4-5', title:'Monitorear economía y ajustar si es necesario', tags:['balance'], desc:'Después de 1 semana con jugadores reales, revisar: precio de joyas en tiendas de jugadores, rate de resets, si el Zen se acumula correctamente. Ajustar con hotfixes si es necesario.' },
+    { id:'m4-6', title:'Contratar CM para Facebook/Instagram/TikTok', tags:['equipo'], desc:'Buscar un Community Manager para manejar las RRSS, responder comentarios, crear contenido regular. Puede ser a porcentaje de ingresos si el budget es ajustado.' },
+  ]
+};
+
+const EQUIPO_DATA = [
+  { id:'eq-1', title:'Administrador Técnico (Franco)', tags:['server'], desc:'Instalación, configuración de base de datos, balanceo de PvP, mantenimiento del VPS, troubleshooting. Responsable de todas las decisiones técnicas del servidor.', rec:'✅ Rol cubierto por vos directamente' },
+  { id:'eq-2', title:'Community Manager (Socio/Colaborador)', tags:['marketing'], desc:'Estrategia de ads (FB/Instagram), creación de contenido para TikTok, atención de dudas en Discord, generación de "hype" previo al lanzamiento y durante la operación.', rec:'⏳ Pendiente de definir — buscar en comunidad MU LatAm' },
+  { id:'eq-3', title:'Game Master (GM) x1-2', tags:['comunidad'], desc:'Presencia in-game 4-6 horas/día. Moderación de chats, eventos manuales (búsqueda, lluvia de joyas, preguntas), reporte de bugs. CRÍTICO: auditar logs semanalmente para evitar abuso.', rec:'⏳ Buscar jugadores veteranos S3 de confianza' },
+  { id:'eq-4', title:'Beta Testers (1-2 externos)', tags:['testing'], desc:'Usuarios con experiencia en MU S3 que jueguen 1-2 meses antes del lanzamiento. Reportan errores específicos de daño, drops incorrectos, bugs de interfaz.', rec:'🔍 Buscar en comunidades de Facebook MU Online' },
+];
+
+const MONETIZACION_DATA = [
+  { id:'mon-1', title:'WCoinC (Coin1) — Solo con dinero real USD', tags:['monetizacion'], desc:'La única moneda premium. Se recarga exclusivamente con USD vía pasarelas de pago. Se usa para: VIP, items del XShop premium, Lucky Wheel, Exclusive Glow. NUNCA se gana jugando.' },
+  { id:'mon-2', title:'WCoinP (Coin2) — Solo por gameplay', tags:['monetizacion'], desc:'Moneda de juego obtenida por: eventos, quests, Daily Reward, tiempo online (Online Reward). Se usa para: Lucky Wheel de menor tier, pociones especiales en XShop básico, ciertos comandos.' },
+  { id:'mon-3', title:'GoblinPoints (Coin3) — Por tiempo online', tags:['monetizacion'], desc:'Moneda pasiva que se acumula por tiempo conectado. Configurable en CashShopGoblinPointDelay y Value por VIP. Útil para comprar consumibles básicos.' },
+  { id:'mon-4', title:'MercadoPago — Argentina, Chile, México, Uruguay', tags:['pago'], desc:'Pasarela principal para LatAm. Permite tarjeta de crédito, débito, efectivo. La más usada por la comunidad argentina. Configurar en el WebEngine CMS.' },
+  { id:'mon-5', title:'Yape / Plin — Perú', tags:['pago'], desc:'Aplicaciones de pago masivo en Perú. El mercado peruano de MU Online es enorme. Imprescindible para capturar ese segmento. Configurar recargas manuales si no hay API.' },
+  { id:'mon-6', title:'Criptomonedas (LTC/USDT)', tags:['pago'], desc:'Para evitar chargebacks (reembolsos fraudulentos) y capturar público global. LTC tiene fees bajos y transacciones rápidas. Usar Binance Pay o billeteras directas.' },
+  { id:'mon-7', title:'XShop — Items permitidos y prohibidos', tags:['monetizacion'], desc:'PERMITIDO: Días VIP, consumibles (pociones, teleport), cosméticos (skins, glow exclusivo), WCoinP packs, slots de inventario extra, rename/changeclass. PROHIBIDO: Cualquier item que dé ventaja en PvP.' },
+];
+
+const UPDATES_DATA = [
+  { id:'upd-1', title:'Update 1-6 (2017) — Base y sistemas fundacionales', tags:['server'], update:'1-6',
+    desc:'Primer lanzamiento de Louis. Establece la base del emulador con sus primeros sistemas custom.',
+    features:['CustomMove — Gates/teletransportación 100% configurables por archivo','CustomJewel — Joyas con comportamientos completamente customizados (éxito/fallo/bonus)','HpBonus System — HP extra permanente por MasterReset (MasterReset*HpBonus)','Kill Message System — Mensajes globales al matar jugadores o bosses específicos','BotBuffer System — NPC buffer automático configurable por horario','SD/HP Bar visual en el personaje (S4/S6)','Custom Arena v1 — Arenas PvP con horarios, requisitos de nivel/reset/vip y recompensas','Combo para todas las clases (EnableComboToAllSwitch)','Castle Siege Skills en todos los mapas (EnableCsSkillsAllMaps)','Custom Ranking in-game (F8) con diferentes tipos de ordenamiento','Auto-reward para eventos: Run&Catch, Hide&Seek, Russian Roulette, Lottery'],
+    vars:['CustomArenaSwitch','HpBonus_AL0~3','BonusManagerSwitch','EnableComboToAllSwitch','EnableCsSkillsAllMaps','CustomRankingSwitch'] },
+
+  { id:'upd-2', title:'Update 7-11 (2018) — Commands + Quests + Visual', tags:['server','client'], update:'7-11',
+    desc:'Expansión masiva de comandos, sistema de patentes y primeros sistemas de quests.',
+    features:['New Command.txt System — Comandos completamente configurables con requisitos de nivel/reset/vip/coins/zen','RankUser por Reset/MReset/Level/Quest — Sistema de patentes completamente customizable','Command /disablePVP, /lock, /unlock — Control de PvP y trading por comando','Print Screen con logo del servidor','Custom NPC Move — NPCs que caminan por el mapa','Custom Party Icon configurable (S4/S6)','Anti SpeedHack Skill System v2 — Detección mejorada','Custom NPC Quest — Sistema completo de quests por NPC','Custom Quest (v2) — Quests con contador de kills, múltiples tipos de recompensas','Custom EventTime — Horario de eventos visible en cliente (tecla H)','Custom Pick v2 — Filtros: joyas / excellent / socket / set','Global Password System para el servidor'],
+    vars:['CustomRankUserSwitch','CustomRankUserType','CustomQuestSwitch','CustomPickSwitch','Command.txt','CustomEventTimeSwitch'] },
+
+  { id:'upd-3', title:'Update 12-14 (2018) — Interface + Seguridad', tags:['server','client'], update:'12-14',
+    desc:'Sistema de interfaces customizables, downgrade visual S1/S2/S3, seguridad avanzada.',
+    features:['Custom Interface S6 — Interface completamente customizable por posición, estilo, colores','Custom Start Item — Items de inicio configurables por clase y nivel VIP','SpeedHack auto ban account (tipo 4) — Ban automático de cuenta','Show Ping / FPS in-game — Indicadores de rendimiento visibles en pantalla','Custom RF Gloves — Guantes extra para Rage Fighter (ideal para equipamiento S6)','Auto-disable systems when VIP expires — Sistemas VIP se apagan solos','New Downgrade Options — Opciones avanzadas para apariencia S1/S2/S3','Stop Auto Reset cuando el VIP vence','Custom NPC Requirement — NPCs que solo atienden según VIP/reset/clase'],
+    vars:['SpeedHackSkillType','CustomInterfaceSwitch','DisableWingMixDL/SU/RF','MGCreateType','DLCreateType'] },
+
+  { id:'upd-4', title:'Update 15-16 (2018) — Custom Mix + Pets', tags:['server'], update:'15-16',
+    desc:'Sistema de combinaciones totalmente customizable y mascotas completamente nuevas.',
+    features:['Custom Mix — Combinaciones del Chaos Machine completamente personalizables (hasta 32.000 tipos)','Custom Duel Bet — Apuestas en duelos con zen/coins','Custom Exchange Coin — Intercambio de monedas entre sí por NPC (ej: WCoinP → GoblinPoints)','Auto Reward Online Users — Recompensa por tiempo online (coins/zen configurable)','Skill Damage System — Control granular del daño de cada skill por clase','Guild vs Guild Event — Evento GvG con arena y sistema de puntaje','Custom Pets System — Mascotas totalmente custom con efectos, movimiento, glow, stats','Custom Jewel Bank (J) — Banco de joyas accesible con tecla J','Custom Bow/Crossbow v2 — Arcos y ballestas personalizadas (hasta 100)','Disable Move List (M) — Deshabilita el menú de teletransporte (perfecto para S3)','Disable Set +15 Effect — Sin efecto visual exagerado del set +15','Ranking GvG / Battle Royale'],
+    vars:['CustomMixSwitch','CustomPickSwitch','CustomPetsSwitch','CustomJewelBankSwitch','DisableMoveDifferenceLevel','OnlineRewardCoin1Delay'] },
+
+  { id:'upd-5', title:'Update 17-18 (2018) — Off Systems + Visual', tags:['server','client'], update:'17-18',
+    desc:'Sistemas offline, Monster Power Table, apariencia visual avanzada.',
+    features:['Custom Monster Power Table — Escala el poder de monstruos por resets del mapa','Custom Monster Information — Info del mob al hacer Alt+Hover (HP, defensa, drop)','Custom Jewel Bank mejorado — Banco accesible y configurable','Map by AccountLevel — Mapas exclusivos bloqueados por nivel VIP','Off Attack Auto Resume — El farming offline se reanuda al reconectar al GS','Off Store Auto Resume — La tienda offline continúa al reiniciar el GameServer','Boss Top Hit Drop System — El item especial cae al que más daño hizo al boss','Custom Pet Dynamic/Static Effect — Efectos visuales de mascotas','Auto-disable de sistemas al vencer VIP (Off Attack, Off Store, Auto Reset, OffPvP)','Trade by Map — Permite o bloquea el trade por mapa específico'],
+    vars:['CustomMonsterPowerTable','MapManager AccountLevel','CustomOffHelperSwitch','CustomAttackOffAutoResumeEnable','CustomStoreOffAutoResumeEnable'] },
+
+  { id:'upd-6', title:'Update 19-21 (2018-2019) — Custom Cloak + AntiDupe', tags:['server','client'], update:'19-21',
+    desc:'Capas customizadas, nuevo sistema de menú, antiduplicación integrada en múltiples puntos.',
+    features:['Custom Cloak — Capas/backs custom con stats propias','Custom Font (S4/S6) — Tipografía del cliente completamente personalizable','Custom Post Item (S4/S6) — Mensajes globales con items adjuntos (como "postear" un drop)','Message.txt multi-language — Mensajes del servidor en múltiples idiomas simultáneos','New Menu System (S4/S6) — Menú principal renovado','Personal Store save values — La tienda personal recuerda precios al reconectar','AntiDupe v1 integrado — 5 puntos de verificación: inventario→warehouse, logout, jewel bank, pack/unpack, chaos machine','Quest Window visible en cliente','New Downgrade Options avanzadas (S4/S6) — Apariencia S1/S2/S3 completa','9 nuevos slots de mapas custom (total 18) (S4/S6)'],
+    vars:['CustomCloakSwitch','CustomFontSwitch','ScriptSystemEnable','AntiDupe (integrado)'] },
+
+  { id:'upd-7', title:'Update 22-23 (2019) — Select Character + Auction', tags:['server','client'], update:'22-23',
+    desc:'Pantalla de selección personalizable, subasta in-game, sistema AntiFlood.',
+    features:['Select Character completamente personalizado — Muestra resets, mreset, rankuser, nivel+master','Select Character con animaciones propias','Select Server con nombres de salas customizables','AntiFlood System — Protección contra flood de conexiones (anti-DDoS básico a nivel GS)','Dragon Sky Switch — Activa/desactiva dragones volando durante invasiones','Custom Attack Skill Control — Define qué skills usa el Off Attack','Custom Monster Glow/Effect — Monstruos con efectos visuales custom','Right Click para equipar/unequipar items','Auction System — Subastas in-game (hasta 200 simultáneas)','Pvp Championship Event — Torneo eliminatorio con brackets','Guild War improvements — Mejoras al sistema de guerra','Custom Mix aumentado a 32.000 combinaciones','Party Level Gap Option — Diferencia máxima de nivel para party'],
+    vars:['AntiFloodActive','AntiFloodMaxCount','EventAuctionSwitch','EventPvpChampionshipSwitch','CustomAttackSkillControl'] },
+
+  { id:'upd-8', title:'Update 24-25 (2019) — Anti SpeedMove + PK Zone', tags:['server','security'], update:'24-25',
+    desc:'Anti-hackeo de movimiento, zonas PK configurables, límites de entrada a eventos.',
+    features:['Anti Speed Hack Movement — Detecta teleportación y movimiento imposible por hacks','Custom Client Icon — Ícono del .exe del launcher totalmente customizable','Custom Monster Skill — Monstruos con skills propias (ej: boss que teleporta, hace área, etc.)','Item Inventory Reskin — Cambiar la apariencia de items en el inventario','EventItemBag drops in inventory — Las cajas caen directamente al inventario del jugador','Kundun boss con OrderOfProtection y HP regen configurable','Promotional Banner al entrar al juego','PK Zone System — Zonas de PK definidas por mapa, con flags y reglas','Event Entry Count Limit — Límite de entradas por día a cada evento (por nivel VIP)','Status Points by Master Level — Puntos de stats adicionales por master level','ExcellentOptionRate.txt — Control preciso del rate de opciones excellent','Npc Invasion — NPC que puede iniciar invasiones manualmente','Custom Sign by VIP/RankUser — Símbolo visual junto al nombre del personaje'],
+    vars:['SpeedHackMovementEnable','SpeedHackMovementType','BloodCastleMaxEntryCount_AL0~3','PkCanEnter','CustomSignByVip'] },
+
+  { id:'upd-9', title:'Update 26-28 (2020) — Gremory + Flags + AddStatus', tags:['server'], update:'26-28',
+    desc:'Sistema Gremory Case, banderas de guild, modos avanzados de distribución de stats.',
+    features:['Gremory Case System — Items almacenados automáticamente con fecha de expiración (ideal para premios de eventos)','Custom Flag System — Banderas/insignias visuales para guilds o zonas','Custom Add Status System (4 modos) — 0=desactivado, 1=normal, 2=valor exacto, 3=permite negativos','Custom Invasion Info en HUD del cliente — Info de invasiones activas visible en tiempo real','Custom Skin System — Skins visuales para personajes (por VIP o items)','Disable Guild PK — Opción para no poder hacer PK entre miembros del mismo guild','Custom Pet Damage decrease — Opción para que las mascotas absorban % del daño'],
+    vars:['GremoryCaseEnable','GremoryCaseExpireDays','CustomFlagSwitch','CustomAddStatusType_AL0~3','CustomSkinSwitch'] },
+
+  { id:'upd-10', title:'Update 29-31 (2020-2021) — Market + Guild Shop + Battle Pass', tags:['server'], update:'29-31',
+    desc:'Economía in-game avanzada: mercado de jugadores, tienda de guild, pase de batalla.',
+    features:['Custom Market Place — Mercado de jugadores in-game con moneda propia, comisiones y fecha de expiración de ofertas','Custom Guild Shop — Tienda de guild con puntos acumulados por CS, kills, resets, online time','Custom Lucky Wheel — Ruleta de la suerte con premios y costos configurables','Custom Gift Code — Códigos de regalo canjeables in-game (ideal para streamers/influencers)','Custom Character Details — Ventana de detalles avanzados del personaje','Custom Black Smith Item — Sistema del herrero con descuentos configurables por VIP','Custom Guild Reign — Territorios de guild con gates exclusivos para guildmates','Custom Battle Pass — Pase de batalla con puntos por quests/eventos/resets/niveles','Custom Daily Reward — Recompensa diaria por login (configurable en cantidad y tipo)','Custom Exclusive Glow — Brillo exclusivo comprado con WCoins','Custom Achievements — Sistema de logros con niveles escalables y recompensas','Custom Inventory Visual — Skin del inventario por nivel VIP','Party Search System — Buscador de party visible en el cliente'],
+    vars:['CustomMarketPlaceSwitch','CustomGuildShopSwitch','CustomLuckyWheelSwitch','CustomGiftCodeSwitch','CustomBattlePassSwitch','CustomDailyRewardSwitch','CustomAchievementsSwitch','CustomInventoryVisualSwitch'] },
+
+  { id:'upd-11', title:'Update 32-35 (2022) — Fake Players + Pandora + Arena v2', tags:['server'], update:'32-35',
+    desc:'Eventos adicionales, mejoras masivas al sistema de arena y Custom Arena v2.',
+    features:['Custom Fake Online Players — Bots de presencia para dar apariencia de servidor activo','Pandora Event — Evento tipo caja de Pandora con timer y premios aleatorios','Custom Arena v2 — Arena con auto item reward, comando de entrada y configuración avanzada','Custom Mix acepta Talisman of Lucky — Combinaciones con bonus de suerte','Custom Jewel v4 — Joyas que remueven opciones excellent/socket/ancient específicas','Custom Pick v3 actualizado — Pick all, pick jewels específico, pick excellence completo','Skill disable by Map/PvP/PvM — Deshabilitar skills específicas en contextos definidos','Duel Max Time option — Límite de tiempo configurable en duelos','Item plus level by item type rate — Rate de upgrade diferenciado por tipo de item','Pandora Event con timer configurable'],
+    vars:['CustomFakeOnlineSwitch','EventPandoraSwitch','CustomArenaSwitch','SkillDisableByMap','DuelMaxTime'] },
+
+  { id:'upd-12', title:'Update 36-42 (2023-2025) — LUA + CS Points + Achievements v2', tags:['server'], update:'36-42',
+    desc:'Motor de scripts LUA, Castle Siege por puntos, mejoras masivas a todos los sistemas.',
+    features:['LUA Script System — Motor de scripting para lógica custom: intercepta daño, crea mecánicas únicas sin recompilar','Castle Siege Point System — CS por puntos: kills de GM/Assist/BM + tiempo de crown + activar switches = puntaje final','Custom Achievements v2 — Rebuild de logros por VIP, tipo de conteo de kills (last hit o top hit)','Marathon Event — Evento de carrera in-game','Custom Battle Pass v2 — Más triggers: by event (BC,DS,IT,CC), by rankuser, by master reset','Custom Guild Shop Points mejorado — Online time delay configurable, soccer, guild war points','Custom Market Place v2 — Marketplace con coin de mercado propia (comprar/vender coins de mercado con WCoins)','SocketItemCreateSeed/SeedSphere custom — Semillas y esferas de socket totalmente customizables','LUA Bridge para daño — Scripts que interceptan el daño en tiempo real para crear mecánicas únicas','SNT integration (Update 42) — Sistema Nacional de Turnos integrado para Consulado AR 😄'],
+    vars:['ScriptSystemEnable','ScriptSystemOnUserDamageEnable','ScriptSystemOnMonsterDamageEnable','CastleSiegePointSwitch','EventMarathonSwitch'] },
+];
+
+const SERVER_CFG_DATA = [
+  { id:'scfg-1', title:'GameServerInfo - Common.dat — Configuración General', tags:['server'], file:'Common.dat',
+    desc:'Variables globales del servidor: nombre, puertos, límites, sistemas básicos.',
+    features:['ServerName — Nombre de la sala visible en el Select Server','ServerMaxUserNumber — Máximo de usuarios simultáneos','ServerLock — Nivel VIP mínimo para acceder a un server room exclusivo','MaxIpConnection — Conexiones máximas por IP (anti-multicuenta)','DisconnectOnlineAccount — Desconecta la sesión anterior al loguear en otra PC','CharacterCreateSwitch — Activa/desactiva la creación de personajes','PersonalShopSwitch — Activa el sistema de tienda personal en safe zone','DuelSwitch — Activa el sistema de duelos','GuildCreateSwitch — Activa la creación de guilds'],
+    code:'ServerName = MU S3 Classic\nServerMaxUserNumber = 200\nMaxIpConnection = 3\nDisconnectOnlineAccount = 1\nNonPK = 0\nPersonalShopSwitch = 1\nPersonalShopOnlySafeZone = 1\nPersonalShopMoneyCommisionRate = 5' },
+
+  { id:'scfg-2', title:'GameServerInfo - Command.dat — Sistema de Resets', tags:['server'], file:'Command.dat',
+    desc:'Todo el sistema de resets y master resets es configurable aquí por nivel VIP.',
+    features:['CommandResetType — 0=Conserva puntos acumulados / 1=Resetea los puntos','CommandResetLevel_AL0~3 — Nivel requerido para resetear por tier VIP','CommandResetMoney_AL0~3 — Zen requerido para resetear por tier VIP','CommandResetLimit_AL0~3 — Máximo de resets totales por tier VIP','CommandResetLimitDay_AL0~3 — Máximo de resets por día por tier VIP','CommandResetStartLevel_AL0~3 — Nivel inicial tras el reset por tier VIP','CommandResetPoint_AL0~3 — Puntos que se ganan por reset por tier VIP','CommandResetMove_AL0~3 — Mueve el personaje a safe zone al resetear','CommandMasterResetReset_AL0~3 — Resets necesarios para hacer mreset'],
+    code:'CommandResetType = 0\nCommandResetLevel_AL0 = 400\nCommandResetLevel_AL1 = 380\nCommandResetLevel_AL2 = 350\nCommandResetLevel_AL3 = 320\nCommandResetMoney_AL0 = 10000000\nCommandResetLimit_AL0 = 100\nCommandResetLimitDay_AL0 = 2\nCommandResetStartLevel_AL0 = 1\nCommandResetPoint_AL0 = 500' },
+
+  { id:'scfg-3', title:'GameServerInfo - Common.dat — Experience + EXP Tables', tags:['server'], file:'Common.dat',
+    desc:'Multiplicadores de EXP por nivel VIP y el archivo ExperienceTable.txt para EXP diferenciada por rango de nivel/reset.',
+    features:['AddExperienceRate_AL0~3 — Multiplicador base EXP por VIP (100=normal, 150=+50%)','AddMasterExperienceRate_AL0~3 — EXP maestro por VIP','AddEventExperienceRate_AL0~3 — EXP de eventos por VIP','OffAttackExperienceRate_AL0~3 — EXP del Off Attack por VIP (configurable menor que el activo)','ExperienceTable.txt — EXP diferenciada por rango de nivel y cantidad de resets'],
+    code:'AddExperienceRate_AL0 = 100\nAddExperienceRate_AL1 = 120\nAddExperienceRate_AL2 = 140\nAddExperienceRate_AL3 = 160\nOffAttackExperienceRate_AL0 = 0\nOffAttackExperienceRate_AL1 = 70\nOffAttackExperienceRate_AL2 = 85\nOffAttackExperienceRate_AL3 = 100' },
+
+  { id:'scfg-4', title:'MapManager.txt — Configuración por Mapa', tags:['server'], file:'MapManager.txt',
+    desc:'Cada mapa tiene su propia configuración de PK, drop, EXP, comandos habilitados.',
+    features:['NonPK — PK habilitado/deshabilitado en este mapa específico','ExperienceRate — Multiplicador EXP específico del mapa','ItemDropType — Tipos de drop permitidos (zen, items, event bags)','ItemDropRate — Multiplicador de drop del mapa','AccountLevel — Nivel VIP mínimo para entrar al mapa (mapas exclusivos)','CustomAttack — Off Attack habilitado en este mapa','CustomPick — Auto Pick habilitado en este mapa','AllowTrade — Trade habilitado en este mapa','DeathGate — Gate al que va el jugador al morir en este mapa'],
+    code:'// Ejemplo Lorencia (Mapa 0)\n0  NonPK=0  ExperienceRate=100  ItemDropType=7\n   AllowTrade=1  CustomAttack=1  CustomPick=1\n\n// Ejemplo Mapa VIP exclusivo\n15 AccountLevel=1  NonPK=1  ExperienceRate=110' },
+
+  { id:'scfg-5', title:'InvasionManager.dat — Sistema de Invasiones', tags:['server'], file:'InvasionManager.dat',
+    desc:'Invasiones de monstruos programadas o manuales con drops y boss especiales.',
+    features:['InvasionName — Nombre visible de la invasión','WarningTime — Minutos de aviso previo al inicio','InvasionTime — Duración de la invasión (segundos)','BossIndex — Monstruo boss especial de la invasión','BossMessage — Mensaje global al matar el boss','NeedOnlinePlayers — Jugadores online mínimos para que spawne','RespawnMessage / DespawnMessage — Mensajes de inicio y fin','Horario configurable: año/mes/día/hora/minuto para cada invasión'],
+    code:'// Golden Dragon en Lorencia - cada 3 horas\nInvasionName = Invasión del Dragón Dorado\nWarningTime = 5\nInvasionTime = 900\nBossIndex = 43\nBossMessage = 1\nNeedOnlinePlayers = 10' },
+
+  { id:'scfg-6', title:'BonusManager.dat — Eventos de EXP/Drop Programados', tags:['server'], file:'BonusManager.dat',
+    desc:'Bonus automáticos de EXP, drop, coins por horario. Perfecto para weekends y eventos especiales.',
+    features:['BonusIndex 0 — Extra EXP rate','BonusIndex 1 — Extra Master EXP rate','BonusIndex 2 — Extra drop de item específico','BonusIndex 3 — Extra drop común','BonusIndex 4 — Extra Excellent drop','BonusIndex 5 — Extra Ancient drop','BonusIndex 6 — Extra Goblin Points','BonusIndex 7 — Extra Reset','BonusValue_AL0~3 — Valor del bonus por nivel VIP'],
+    code:'// Weekend Bonus: +50% EXP\n// Viernes 20:00 a Domingo 23:59\nBonusTime = 144000\nBonusIndex = 0\nBonusValue_AL0 = 50\nBonusValue_AL1 = 70\nBonusValue_AL2 = 80\nBonusValue_AL3 = 100' },
+
+  { id:'scfg-7', title:'GameServerInfo - Custom.dat — Sistemas Custom Off Attack / Store / Pick', tags:['server','vip'], file:'Custom.dat',
+    desc:'Los tres sistemas offline principales — corazón del beneficio VIP sin MuHelper.',
+    features:['CustomAttackTime_AL0~3 — Tiempo máximo de Off Attack por VIP (0=desactivado para FREE)','CustomAttackDelay — Delay entre ataques en ms','CustomAttackAutoPotionDelay — Delay entre pociones','CustomAttackAutoBuff_AL0~3 — Auto-buff por VIP','CustomAttackAutoRepair_AL0~3 — Auto-reparación de items','CustomAttackCanMove — Permite moverse entre mapas','CustomOffHelperSwitch — Activa el Off Helper','CustomOffHelperTime_AL0~3 — Tiempo máximo de Off Helper','CustomOffHelperPickEnable_AL0~3 — AutoPick durante Off Helper','CustomPickSwitch — Activa el sistema de auto pick','CustomPickEnable_AL0~3 — AutoPick por nivel VIP','CustomStoreTime_AL0~3 — Tiempo máximo de Off Store'],
+    code:'// FREE no tiene Off Attack ni Off Helper ni AutoPick\nCustomAttackTime_AL0 = 0\nCustomOffHelperTime_AL0 = 0\nCustomPickEnable_AL0 = 0\n\n// VIP1: 4h off attack + pick joyas\nCustomAttackTime_AL1 = 240\nCustomOffHelperTime_AL1 = 240\nCustomPickEnable_AL1 = 1\n\n// VIP3: ilimitado + todo\nCustomAttackTime_AL3 = 0\nCustomOffHelperTime_AL3 = 0\nCustomPickEnable_AL3 = 1' },
+
+  { id:'scfg-8', title:'GameServerInfo - Custom.dat — RankUser + Daily + Battle Pass', tags:['server'], file:'Custom.dat',
+    desc:'Sistema de patentes, recompensas diarias y pase de batalla.',
+    features:['CustomRankUserSwitch — Activa el sistema de rangos/patentes','CustomRankUserType — 0=Reset / 1=MReset / 2=Level / 3=Quest','CustomRankUserRewardSwitch — Recompensa al subir de rango','CustomRankUserNoticeToAll — Anuncio global al cambiar de rango','CustomDailyRewardSwitch — Recompensas de login diario','CustomBattlePassSwitch — Pase de batalla con puntos por actividades','CustomGuildShopSwitch — Tienda de guild con puntos por CS/actividad','CustomLuckyWheelSwitch — Ruleta de la suerte','CustomGiftCodeSwitch — Códigos de regalo canjeables','CustomAchievementsSwitch — Sistema de logros'],
+    code:'CustomRankUserSwitch = 1\nCustomRankUserType = 0\nCustomRankUserRewardSwitch = 1\nCustomRankUserNoticeToAll = 1\nCustomDailyRewardSwitch = 1\nCustomDailyRewardLevel = 50\nCustomDailyRewardReset = 0\nCustomGuildShopSwitch = 1\nCustomGuildShopSiegeCrownPoint = 100\nCustomGuildShopSiegeKillPoint = 5\nCustomGuildShopResetPoint = 10' },
+
+  { id:'scfg-9', title:'GameServerInfo - Character.dat — Balance PvP por Clase', tags:['server','balance'], file:'Character.dat',
+    desc:'Control granular de daño entre clases. Crucial para balancear S3 donde el DK tiende a dominar.',
+    features:['GeneralDamageRatePvP — % de daño global en PvP','DWDamageRatePvP / DKDamageRatePvP / FEDamageRatePvP / MGDamageRatePvP / DLDamageRatePvP / SUDamageRatePvP — Daño de cada clase en PvP','Cruce clase vs clase: DKDamageRateToDW, DKDamageRateToFE, etc. — Ajuste micro de combinaciones específicas','MaxReflectRate — Cap máximo de reflejo de daño','MaxDamageReductionRate — Cap máximo de reducción de daño','DuelDamageRate — Daño específico para duelos','DKComboDamagePvPConstA/B — Constantes del daño del combo del DK en PvP'],
+    code:'// Bajar ligeramente el DK para balancear S3\nDKDamageRatePvP = 90\nDKDamageRateToFE = 85\n\n// Subir Summoner para compensar su curva\nSUDamageRatePvP = 105\nSUDamageRatePvM = 100\n\n// Caps para evitar builds rotas\nMaxReflectRate = 50\nMaxDamageReductionRate = 50' },
+
+  { id:'scfg-10', title:'GameServerInfo - Common.dat — Jewels + Chaos Mix Rates', tags:['server','economy'], file:'Common.dat + ChaosMix.dat',
+    desc:'Tasas de éxito de joyas y combinaciones del Chaos Machine por nivel VIP.',
+    features:['SoulSuccessRate_AL0~3 — % éxito Joya del Alma por VIP','LifeSuccessRate_AL0~3 — % éxito Joya de Vida por VIP','HarmonySuccessRate_AL0~3 — % éxito Joya de Armonía por VIP','AddLuckSuccessRate1_AL0~3 — Bonus de suerte por VIP','PlusItemLevelMixRate1~6_AL0~3 — Rate de upgrade +10 a +15 por VIP','Wing2MixRate_AL0~3 — Rate de crear Alas Nivel 2 por VIP','Wing1MixRate_AL0~3 — Rate de crear Alas Nivel 1 por VIP','FruitMixRate_AL0~3 — Rate de crear Fruta por VIP'],
+    code:'// Rates S3 auténticos + pequeño bonus VIP\nSoulSuccessRate_AL0 = 60\nSoulSuccessRate_AL1 = 65\nSoulSuccessRate_AL2 = 70\nSoulSuccessRate_AL3 = 75\n\nLifeSuccessRate_AL0 = 80\nLifeSuccessRate_AL1 = 83\n\n// Upgrade alto nivel es desafío real\nPlusItemLevelMixRate5_AL0 = 45\nPlusItemLevelMixRate6_AL0 = 30' },
+];
+
+const CLIENT_CFG_DATA = [
+  { id:'ccfg-1', title:'Downgrade Visual a Season 3 Ep.2', tags:['client'], file:'Multiple files',
+    desc:'Convertir la apariencia visual de S6 a S3 manteniendo el engine S6 por debajo.',
+    features:['MasterSkillTree = 0 — Sin árbol de habilidades maestras (es de S6)','DisableWingMixDL/SU/RF = 1 — Sin mix de alas para clases post-S3','SUCreateType = 1 (Card) — Summoner requiere item especial para crear','MGCreateType = 1 (Card) — MG requiere item especial para crear','DisableMoveDifferenceLevel = 1 — Sin diferencia de nivel en el menú Move (M) propio S3','PartyMaxMembers = 5 — Party máximo de 5 (S3 clásico)','Usar cliente S3 con los .bmd del S3 para apariencia auténtica','Custom Interface con posiciones de barra de vida/mana del S3','RequiredItemLevelCheckMasterLevel = 0 — Los items solo requieren nivel normal, no master'],
+    code:'MasterSkillTree = 0\nDisableWingMixDL = 1\nDisableWingMixSU = 1\nDisableWingMixRF = 1\nSUCreateType = 1\nMGCreateType = 1\nPartyMaxMembers = 5\nDisableMoveDifferenceLevel = 1\nRequiredItemLevelCheckMasterLevel = 0' },
+
+  { id:'ccfg-2', title:'Custom Interface (S6 moderna sobre look S3)', tags:['client'], file:'Interface files + GameServerInfo',
+    desc:'Usar la interface S6 (con barra SD visible, botones modernos) pero con assets y colores del S3.',
+    features:['Custom Interface — Archivos de posicionamiento de elementos de la UI','Custom Font — Tipografía propia del servidor cargada en el cliente','Custom Client Icon — Icono del .exe del launcher','Promotional Banner — Banner de bienvenida al entrar al juego','Show Ping/FPS in-game — Visible en pantalla para los jugadores','Custom Name Style — Estilo del nombre sobre el personaje','Custom Sign by VIP/Rank — Símbolo junto al nombre según rango o VIP','Custom MiniMap tipo 2 — Segundo estilo de minimapa','Monster name visible + color custom'],
+    code:'// Configurables en Custom Interface editor\n// y en GameServerInfo - Custom.dat\nCustomFontSwitch = 1\nCustomSignVipSwitch = 1\nPickMessageSwitch = 1\nPickMessageExcellentItem = 1\nPickMessageSetItem = 1' },
+
+  { id:'ccfg-3', title:'Select Character y Select Server personalizados', tags:['client'], file:'GameServerInfo - Custom.dat',
+    desc:'La pantalla de selección de personaje puede mostrar mucha información y tener animaciones.',
+    features:['Select Character — Muestra nivel + master level del personaje','Select Character — Muestra resets y master resets','Select Character — Muestra el RankUser/patente actual','Select Character — Animaciones de los personajes en la pantalla','Select Server — Nombres de salas completamente customizables','Select Character — Muestra el nivel de VIP de la cuenta'],
+    code:'SelectCharLevelMasterLevel = 1\nCustomRankUserSwitchCharacter = 1\n// Configurar en interfaz del cliente\n// Sala 1: S3 Classic | Sala 2: S3 VIP Room' },
+
+  { id:'ccfg-4', title:'Sistema de Mensajes y Notificaciones (Notice.txt)', tags:['client'], file:'Notice.txt + Message.txt',
+    desc:'Mensajes automáticos que aparecen en el cliente: slides, mensajes globales, anuncios.',
+    features:['Notice.txt — Mensajes periódicos automáticos (slides, chat global, mensajes del sistema)','Message.txt — Mensajes del servidor para invasiones, eventos, deaths, anuncios','Message.txt multi-language — Soporte para español e inglés simultáneos','Tipos de mensajes: chat normal, sistema, slide animado','Controlar opacidad, velocidad y color de los slide messages'],
+    code:'// Notice.txt - Anuncio cada 30 min\nMessage = ¡Visita nuestra web para recargar WCoins!\nType = 2\nOpacity = 80\nDelay = 8\nColorR = 255\nColorG = 215\nColorB = 0\nSpeed = 1\nRepeatTime = 1800' },
+
+  { id:'ccfg-5', title:'Pick Message — Notificación visual de drops', tags:['client'], file:'GameServerInfo - Custom.dat',
+    desc:'Muestra un mensaje en pantalla cuando el personaje recoge un item especial.',
+    features:['PickMessageSwitch — Activa las notificaciones de picks','PickMessageExcellentItem — Notifica al pickear un item Excellent','PickMessageSetItem — Notifica al pickear un item Ancient/Set','PickMessageSocketItem — Notifica al pickear un item Socket','PickMessageColor — Color del texto de la notificación'],
+    code:'PickMessageSwitch = 1\nPickMessageExcellentItem = 1\nPickMessageSetItem = 1\nPickMessageSocketItem = 0\nPickMessageColor = 1' },
+];
+
+const SECURITY_DATA = [
+  { id:'sec-1', title:'Speed Hack — Detección de ataques imposibles', tags:['server','security'], file:'Hack.dat',
+    desc:'Detecta cuando un personaje ataca más rápido de lo físicamente posible.',
+    features:['CheckSpeedHack = 1 — Activa la detección','CheckSpeedHackTolerance — Tolerancia en unidades antes de penalizar','SpeedHackSkillType — Acción: 0=log, 1=disconnect, 2=disable attack, 3=disable Xms, 4=disconnect+ban','SpeedHackSkillMaxOverHits — Hits excedidos para aplicar el tipo secundario','SpeedHackSkillDialog — Muestra mensaje al jugador penalizado'],
+    code:'CheckSpeedHack = 1\nCheckSpeedHackTolerance = 3\nSpeedHackSkillType = 4\nSpeedHackSkillMaxOverHits = 10\nSpeedHackSkillDialog = 1\nSpeedHackSkillDebug = 0' },
+
+  { id:'sec-2', title:'Speed Hack Movement — Teleportación imposible', tags:['server','security'], file:'Hack.dat',
+    desc:'Detecta cuando un personaje se mueve a velocidades imposibles (hacks de movimiento/teleport).',
+    features:['SpeedHackMovementEnable — Activa la detección de movimiento','SpeedHackMovementType — 0=log, 1=disconnect, 2=ban, 3=Order of Restraint buff','SpeedHackMovementDistanceNormal — Distancia máxima permitida sin montura','SpeedHackMovementDistanceFenrir/Horse/Wing — Con cada tipo de montura','SpeedHackMovementTolerance — Cantidad de infracciones antes de actuar','SpeedHackMovementMaxBlockDays — Días de bloqueo de cuenta'],
+    code:'SpeedHackMovementEnable = 1\nSpeedHackMovementType = 2\nSpeedHackMovementDistanceNormal = 15\nSpeedHackMovementDistanceFenrir = 20\nSpeedHackMovementDistanceWing = 18\nSpeedHackMovementTolerance = 5\nSpeedHackMovementMaxBlockDays = 7' },
+
+  { id:'sec-3', title:'AntiFlood — Protección contra flood de conexiones', tags:['server','security'], file:'Hack.dat',
+    desc:'Bloquea IPs que intentan conectarse masivamente en corto tiempo (DDoS básico a nivel GS).',
+    features:['AntiFloodActive — Activa el sistema','AntiFloodResetTime — Tiempo para resetear el contador (ms)','AntiFloodMaxCount — Máximas conexiones antes de bloquear','AntiFloodCheckTime — Tiempo de verificación (ms)','AntiFloodBlocTime — Tiempo de bloqueo de la IP (minutos)'],
+    code:'AntiFloodActive = 1\nAntiFloodResetTime = 5000\nAntiFloodMaxCount = 30\nAntiFloodCheckTime = 1000\nAntiFloodBlocTime = 30' },
+
+  { id:'sec-4', title:'AntiDupe — Prevención de duplicación de items', tags:['server','security'], file:'Integrado en GS',
+    desc:'Sistema anti-duplicación integrado en múltiples puntos críticos del GameServer.',
+    features:['Verificación al mover items entre inventario y warehouse','Verificación al desloguear un personaje','Verificación al enviar joyas al Jewel Bank','Verificación al hacer pack/unpack de joyas','Verificación al abrir la Chaos Machine','CheckHackDupeAutoBan = 1 — Ban automático al detectar intento de dupe','Logs detallados de cada intento detectado'],
+    code:'CheckHackDupeAutoBan = 1\n// El sistema verifica automáticamente\n// en 5 puntos críticos del flujo de items' },
+
+  { id:'sec-5', title:'SQL Server — Seguridad de Base de Datos', tags:['server','security'], file:'Firewall del VPS',
+    desc:'CRÍTICO: la base de datos debe estar completamente protegida desde el firewall.',
+    features:['Bloquear puerto 1433 en el firewall del VPS — Solo el WebHost puede conectarse','Solo el servidor local (127.0.0.1) accede al SQL directamente','Contraseña del SQL Server compleja (mínimo 16 chars)','Backups automáticos cada 6 horas a almacenamiento externo (Google Drive/MEGA)','Auditoría semanal de logs del GameMaster para detectar abusos','GameMaster.txt — Lista de cuentas GM con nivel de acceso (1=GM, 2=Admin)'],
+    code:'// Regla de firewall en OVH:\nDenegar: Puerto 1433 desde TODAS las IPs\nPermitir: Puerto 1433 solo desde IP del WebHost\nPermitir: Puerto 55901 solo desde IPs del ConnectServer' },
+];
+
+const EVENTS_DATA = [
+  { id:'evt-1', title:'Blood Castle — Evento clásico S3', tags:['server','event'], switch:'BloodCastleEvent',
+    desc:'8 niveles de Blood Castle. Los jugadores usan Invitaciones para entrar. Matan monstruos y recuperan el Arma del Archangel. El ganador recibe recompensas y EXP.',
+    features:['BloodCastleEvent = 1 (League mode)','BloodCastleEnterType — 0=Level / 1=Reset / 2=MReset / 3=Sin check','BloodCastleMaxUser — Máximo de usuarios simultáneos','BloodCastleAllowSafeZoneBuff = 1 — Permite buff en zona segura','BloodCastleMaxEntryCount_AL0~3 — Entradas máximas por día por VIP'],
+    code:'BloodCastleEvent = 1\nBloodCastleEnterType = 0\nBloodCastleMaxUser = 15\nBloodCastleAllowSafeZoneBuff = 1\nBloodCastleMaxEntryCount_AL0 = 3\nBloodCastleMaxEntryCount_AL3 = 6' },
+
+  { id:'evt-2', title:'Devil Square — Grind grupal con ranking', tags:['server','event'], switch:'DevilSquareEvent',
+    desc:'7 niveles de Devil Square. Grind masivo con monstruos y boss. Ranking por kills, el top jugador recibe recompensas especiales.',
+    features:['DevilSquareEvent = 1','DevilSquareEnterType — Tipo de entrada (nivel/reset/sin check)','DevilSquareMaxUser — Máximo de usuarios'],
+    code:'DevilSquareEvent = 1\nDevilSquareEnterType = 0\nDevilSquareMaxUser = 20\nDevilSquareMaxEntryCount_AL0 = 2\nDevilSquareMaxEntryCount_AL3 = 4' },
+
+  { id:'evt-3', title:'Chaos Castle — Battle Royale de S3', tags:['server','event'], switch:'ChaosCastleEvent',
+    desc:'El último sobreviviente gana. Hasta 75 jugadores en la arena. Monstruos que explotan al morir pueden impulsar a los jugadores fuera de la plataforma.',
+    features:['ChaosCastleEvent = 1','ChaosCastleMinUser — Mínimo de usuarios para iniciar','ChaosCastleBlowUserRate — % de que el monstruo explote al morir','ChaosCastleMaxEntryCount_AL0~3 — Entradas por día por VIP'],
+    code:'ChaosCastleEvent = 1\nChaosCastleEnterType = 0\nChaosCastleMinUser = 5\nChaosCastleBlowUserRate = 60\nChaosCastleMaxEntryCount_AL0 = 2' },
+
+  { id:'evt-4', title:'Castle Siege — El evento rey de S3', tags:['server','event','critical'], switch:'CastleSiegeEvent',
+    desc:'La guerra semanal de guilds. El guild que controla la corona domina el servidor. Activa beneficios para todo el server y otorga acceso a NPCs especiales.',
+    features:['CastleSiegeEvent = 1','CastleSiegeCycleStartYear/Month/Day — Fecha de inicio del ciclo','CastleSiegePointSwitch = 1 — CS por puntos (moderno y más balanceado)','CastleSiegePointKillMaster/Assist/BM/Other — Puntos por tipo de kill','CastleSiegePointCrownRegister/SwitchUse/Defender — Puntos por acciones','CastleSiegeRankingEnable = 1 — Ranking en tiempo real en el cliente','CastleSiegeDamageRate1~7 — Tasas de daño para cada escenario de CS'],
+    code:'CastleSiegeEvent = 1\nCastleSiegePointSwitch = 1\nCastleSiegePointKillMaster = 50\nCastleSiegePointKillBattleMaster = 20\nCastleSiegePointKillOther = 5\nCastleSiegePointCrownRegister = 100\nCastleSiegePointDefender = 3\nCastleSiegeRankingEnable = 1\nCastleSiegeRankingSaveEnable = 1' },
+
+  { id:'evt-5', title:'Custom Arena — Arena PvP custom', tags:['server','event'], switch:'CustomArenaSwitch',
+    desc:'Arena PvP completamente configurable: horarios, requisitos de nivel/reset, límite de muertes, clases permitidas, auto-rewards.',
+    features:['CustomArenaSwitch = 1','EventTime — Duración del evento (minutos)','MinUser/MaxUser — Jugadores mínimos y máximos','MaxDeath — Muertes máximas antes de ser expulsado (-1 = ilimitado)','Min/Max Level, Reset, MasterReset — Requisitos de entrada','Clases habilitadas (DW/DK/FE/MG/DL/SU/RF) — Cuáles pueden entrar'],
+    code:'CustomArenaSwitch = 1\nEventTime = 30\nMinUser = 4\nMaxUser = 20\nMaxDeath = 3\nMinReset = 5\nDK = 1  DW = 1  FE = 1\nMG = 1  DL = 1  SU = 1  RF = 0' },
+
+  { id:'evt-6', title:'Invasion Manager — Golden Dragon y otros jefes', tags:['server','event'], switch:'InvasionManagerSwitch',
+    desc:'Invasiones de monstruos programadas automáticamente o iniciadas manualmente por el GM.',
+    features:['InvasionManagerSwitch = 1','Hasta 50 tipos de invasión configurables','WarningTime — Aviso previo al inicio (minutos)','InvasionTime — Duración (segundos)','BossIndex — Boss especial de la invasión con mensaje al morir','NeedOnlinePlayers — No spawnea si no hay suficientes jugadores online'],
+    code:'// Golden Dragon cada 3 horas\nInvasionName = Dragón Dorado\nWarningTime = 5\nInvasionTime = 900\nBossIndex = 43\nNeedOnlinePlayers = 10\nBossMessage = 2' },
+
+  { id:'evt-7', title:'Pvp Championship — Torneo eliminatorio', tags:['server','event'], switch:'EventPvpChampionshipSwitch',
+    desc:'Torneo de PvP con brackets de eliminación directa. Los jugadores se inscriben por NPC, el sistema hace los enfrentamientos automáticamente.',
+    features:['EventPvpChampionshipSwitch = 1','EventPvpChampionshipMaxScore — Puntos para ganar un round','EventPvpChampionshipMaxTime — Tiempo máximo por pelea (minutos)','EventPvpChampionshipCharacterRefill — Restaurar vida antes de cada pelea','RoundReward — Recompensa por ganar un round','WinnerReward — Recompensa para el campeón'],
+    code:'EventPvpChampionshipSwitch = 1\nEventPvpChampionshipMaxScore = 10\nEventPvpChampionshipMaxTime = 5\nEventPvpChampionshipCharacterRefill = 1\nEventPvpChampionshipRoundReward1 = 50\nEventPvpChampionshipWinnerReward1 = 500' },
+];
+
+const OFFLINE_DATA = [
+  { id:'off-1', title:'Off Attack (Custom Attack) — Farming Offline', tags:['server','vip'], file:'Custom.dat',
+    desc:'El sistema estrella. El personaje farmea automáticamente sin que el jugador esté conectado. Configurable por nivel VIP.',
+    features:['CustomAttackTime_AL0 = 0 — FREE no puede usar Off Attack','CustomAttackTime_AL1 = 240 — VIP1 = 4 horas/día','CustomAttackTime_AL2 = 720 — VIP2 = 12 horas/día','CustomAttackTime_AL3 = 0 — VIP3 = ilimitado','CustomAttackDelay — Tiempo entre cada ataque (ms)','CustomAttackAutoPotionDelay — Auto-poción con delay configurable','CustomAttackAutoBuff_AL0~3 — Auto-buff activado por VIP','CustomAttackAutoRepair_AL0~3 — Auto-reparación de equipo','CustomAttackOffAutoResumeEnable — Se reanuda solo al reiniciar el GameServer','OffAttackExperienceRate_AL1~3 — EXP del Off Attack (recomendado 70-85% de la EXP activa)'],
+    code:'CustomAttackTime_AL0 = 0\nCustomAttackTime_AL1 = 240\nCustomAttackTime_AL2 = 720\nCustomAttackTime_AL3 = 0\nCustomAttackDelay = 100\nCustomAttackAutoPotionDelay = 500\nCustomAttackAutoBuff_AL1 = 1\nCustomAttackAutoRepair_AL1 = 1\nCustomAttackOffAutoResumeEnable = 1\nOffAttackExperienceRate_AL1 = 75\nOffAttackExperienceRate_AL3 = 90' },
+
+  { id:'off-2', title:'Off Helper — Version avanzada del Off Attack', tags:['server','vip'], file:'Custom.dat',
+    desc:'Versión más completa del farming offline con heal de habilidad, auto-pick y movimiento entre mapas.',
+    features:['CustomOffHelperSwitch = 1 — Activa el Off Helper','CustomOffHelperEnable_AL0~3 — Habilitado por VIP','CustomOffHelperBuffDelay — Delay entre buffs (ms)','CustomOffHelperHealDelay — Delay entre heals de habilidad (ms)','CustomOffHelperPotionDelay — Delay entre pociones (ms)','CustomOffHelperRepairDelay — Delay para reparar items (ms)','CustomOffHelperTime_AL0~3 — Tiempo máximo por VIP','CustomOffHelperPickEnable_AL0~3 — AutoPick durante el Off Helper','CustomOffHelperCanMove — Puede moverse de mapa automáticamente','CustomAttackOffAutoResumeEnable — Se reanuda al reiniciar el GS'],
+    code:'CustomOffHelperSwitch = 1\nCustomOffHelperEnable_AL0 = 0\nCustomOffHelperEnable_AL1 = 1\nCustomOffHelperTime_AL0 = 0\nCustomOffHelperTime_AL1 = 240\nCustomOffHelperTime_AL3 = 0\nCustomOffHelperPickEnable_AL1 = 1\nCustomOffHelperBuffDelay = 5000\nCustomOffHelperPotionDelay = 1000\nCustomOffHelperCanMove = 0' },
+
+  { id:'off-3', title:'Off Store (Custom Store) — Tienda Offline', tags:['server','vip'], file:'Custom.dat',
+    desc:'Los jugadores pueden poner su tienda personal a vender items sin estar conectados.',
+    features:['CustomStoreTime_AL0 = 0 — FREE no puede tener tienda offline','CustomStoreTime_AL1~3 — Tiempo máximo de tienda offline por VIP','CustomStoreCommandJoBSyntax — Comando para abrir tienda de Bless','CustomStoreCommandJoSSyntax — Comando para tienda de Soul','CustomStoreCommandWCCSyntax — Comando para tienda de WCoins','CustomStoreAutoResume_AL0~3 — Auto-reanudar al reconectar','CustomStoreOffAutoResume — Reanuda la tienda al reiniciar el GameServer'],
+    code:'CustomStoreTime_AL0 = 0\nCustomStoreTime_AL1 = 480\nCustomStoreTime_AL2 = 1440\nCustomStoreTime_AL3 = 0\nCustomStoreCommandJoBSyntax = /sellbless\nCustomStoreCommandJoSSyntax = /sellsoul\nCustomStoreAutoResume_AL1 = 1\nCustomStoreOffAutoResumeEnable = 1' },
+
+  { id:'off-4', title:'Auto Pick (Custom Pick) — Autopick por VIP', tags:['server','vip'], file:'Custom.dat',
+    desc:'El personaje recoge automáticamente los items del suelo según los filtros configurados.',
+    features:['CustomPickSwitch = 1 — Activa el sistema','CustomPickEnable_AL0 = 0 — FREE: sin autopick','CustomPickEnable_AL1 = 1 — VIP1: puede usar autopick','CustomPickRequireLevel_AL0~3 — Nivel mínimo para usar el comando','CustomPickRequireMoney_AL0~3 — Zen necesario para activarlo','Filtros en CustomPick.txt: joyas / excellent / socket / set / ancient','Comando /pick jewel, /pick all, /pick excellent'],
+    code:'CustomPickSwitch = 1\nCustomPickEnable_AL0 = 0\nCustomPickEnable_AL1 = 1\nCustomPickEnable_AL2 = 1\nCustomPickEnable_AL3 = 1\nCustomPickRequireLevel_AL0 = 400\nCustomPickRequireLevel_AL1 = 200\nCustomPickRequireMoney_AL1 = 1000000' },
+];
+
+const ECONOMY_DATA = [
+  { id:'eco-1', title:'Online Reward — Recompensa por tiempo online', tags:['server','economy'], file:'Common.dat',
+    desc:'El servidor recompensa a los jugadores simplemente por estar conectados. Perfecto para retención en un server medium-slow.',
+    features:['OnlineRewardCoin1Delay — Cada X minutos recibe WCoinC (si lo activas, pero NO recomendado)','OnlineRewardCoin2Delay — Cada X minutos recibe WCoinP (recomendado para free)','OnlineRewardCoin3Delay — Cada X minutos recibe GoblinPoints','OnlineRewardCoin2Value_AL0~3 — Cantidad de WCoinP por VIP','OnlineRewardOfflineSystems_AL0~3 — Si también cuenta el tiempo offline (Off Attack/Store)'],
+    code:'// Solo Coin2 (WCoinP) y Coin3 (GP) por tiempo online\n// Nunca Coin1 (WCoinC) -- ese se paga con USD\nOnlineRewardCoin2Delay = 60\nOnlineRewardCoin2Value_AL0 = 5\nOnlineRewardCoin2Value_AL3 = 10\nOnlineRewardCoin3Delay = 30\nOnlineRewardCoin3Value_AL0 = 10\nOnlineRewardOfflineSystems_AL1 = 1' },
+
+  { id:'eco-2', title:'Bonus Manager — EXP y Drop por horario', tags:['server','economy'], file:'BonusManager.dat',
+    desc:'Eventos automáticos de EXP/Drop según día y hora. Crea ritmo semanal en el servidor.',
+    features:['BonusManagerSwitch = 1 — Activa el sistema','Programable por año/mes/día/hora/minuto/segundo','BonusIndex 0 — Extra EXP','BonusIndex 3 — Extra drop de items comunes','BonusIndex 4 — Extra Excellent drop','BonusIndex 6 — Extra GoblinPoints','BonusValue_AL0~3 — Valor del bonus por VIP (VIP puede tener bonus doble)','Ideal para: Weekend Bonus, Holiday Bonus, Nightly Bonus'],
+    code:'// Weekend Bonus: +50% EXP para todos\n// Viernes 20hs - Domingo 23:59\nBonusTime = 144000  // 40 horas en segundos\nBonusIndex = 0\nBonusValue_AL0 = 50  // Free +50%\nBonusValue_AL1 = 70  // VIP1 +70%\nBonusValue_AL3 = 100 // VIP3 +100%\n\n// Martes: Drop bonus x2\nBonusIndex = 3\nBonusValue_AL0 = 100\nBonusTime = 86400' },
+
+  { id:'eco-3', title:'Personal Shop — Comercio entre jugadores (feel S3)', tags:['server','economy'], file:'Common.dat',
+    desc:'El Personal Shop es el corazón de la economía S3. Los jugadores se ponen como tienda en Lorencia a vender items.',
+    features:['PersonalShopSwitch = 1 — Activa el sistema','PersonalShopOnlySafeZone = 1 — Solo se puede poner en zona segura','PersonalShopMoneyCommisionRate — % de zen que se cobra al servidor (sink de zen)','PersonalShopJewelCommisionRate — % de joyas de comisión','TradeCoinSwitch — Activa el trade de WCoins entre jugadores','TradeSwitch = 1 — Activa el trade básico'],
+    code:'PersonalShopSwitch = 1\nPersonalShopOnlySafeZone = 1\nPersonalShopMoneyCommisionRate = 5\nTradeSwitch = 1' },
+
+  { id:'eco-4', title:'Custom Mix — Combinaciones del Chaos Machine', tags:['server','economy'], file:'CustomMix.txt',
+    desc:'Permite crear combinaciones completamente nuevas en el Chaos Machine. Hasta 32.000 tipos.',
+    features:['Ingredientes completamente configurables (cualquier combinación de items)','Resultado configurable (cualquier item o stack de items)','Rate de éxito configurable','Costo en Chaos (joyas requeridas) configurable','Compatible con Talisman of Lucky para bonus de éxito','Ideal para: recetas de crafting, conversión de materiales, items únicos del servidor'],
+    code:'// Ejemplo: 10 Bless + 10 Soul + 1 Chaos = 5 Life\n// En CustomMix.txt - Sección de mezclas\n// Ingrediente1: Jewel of Bless x10\n// Ingrediente2: Jewel of Soul x10\n// Ingrediente3: Jewel of Chaos x1\n// Resultado: Jewel of Life x5\n// Rate: 80%' },
+];
+
+const DISCORD_DATA = [
+  { id:'disc-1', title:'Configuración base del Discord Webhook', tags:['server','discord'], file:'Discord.dat',
+    desc:'Conecta el GameServer con un canal de Discord para notificaciones en tiempo real.',
+    features:['DiscordServerActive = 1 — Activa toda la integración','DiscordServerAddress — IP del servidor de Discord relay','DiscordServerPort — Puerto del relay','El relay corre como un proceso separado en el VPS','Requiere crear webhooks en el servidor de Discord'],
+    code:'DiscordServerActive = 1\nDiscordServerAddress = 127.0.0.1\nDiscordServerPort = 55920' },
+  { id:'disc-2', title:'Webhooks de Gameplay — Notificaciones de jugadores', tags:['server','discord'], file:'Discord.dat',
+    desc:'Notificaciones automáticas de actividades de los jugadores en tiempo real.',
+    features:['DiscordHookReset = 1 — Notifica cada reset (crea FOMO en el Discord)','DiscordHookMasterReset = 1 — Notifica cada mreset','DiscordHookRankUser = 1 — Notifica cambios de patente/rango','DiscordHookCustomQuest = 1 — Notifica quests completadas','DiscordHookKill = 1 — Notifica kills PvP importantes','DiscordHookInvasionStart = 1 — Avisa el inicio de invasiones','DiscordHookInvasionWinner = 1 — Anuncia al ganador de la invasión','DiscordHookBloodCastle / DevilSquare / ChaosCastle = 1 — Resultados de eventos'],
+    code:'DiscordHookReset = 1\nDiscordHookMasterReset = 1\nDiscordHookRankUser = 1\nDiscordHookInvasionStart = 1\nDiscordHookInvasionWinner = 1\nDiscordHookBloodCastle = 1\nDiscordHookCustomQuest = 1\nDiscordHookKill = 0  // Puede ser spam si hay mucho PvP' },
+  { id:'disc-3', title:'Webhooks de Economía y Admin', tags:['server','discord'], file:'Discord.dat',
+    desc:'Notificaciones de transacciones y movimientos económicos importantes.',
+    features:['DiscordHookSetCoin = 1 — Registra cada recarga de WCoins (para auditoria)','DiscordHookChaosMix = 1 — Notifica Chaos Mix exitosos de items altos','DiscordHookAntihack = 1 — Alerta cuando el anti-hack actúa','DiscordHookGiftCode = 1 — Registra canjes de Gift Codes','DiscordHookMarketPlace = 1 — Transacciones del mercado de jugadores','DiscordHookSmithShop = 1 — Actividad del herrero'],
+    code:'DiscordHookSetCoin = 1\nDiscordHookChaosMix = 1\nDiscordHookAntihack = 1\nDiscordHookGiftCode = 1\nDiscordHookConnect = 0  // Spam si hay muchos jugadores\nDiscordHookChat = 0     // Solo en caso de investigar algo' },
+];
+
+const RECS_DATA = [
+  { id:'rec-usar-1', title:'✅ Off Attack + Off Helper — Sin MuHelper', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'El reemplazo perfecto del MuHelper para tu concepto. FREE no puede farmear offline. El VIP tiene 4/12/∞ horas de Off Attack. Esto justifica el VIP sin romper la economy slow y sin traicionar el espíritu S3.',
+    config:'CustomAttackTime_AL0 = 0 (FREE bloqueado)\nCustomAttackTime_AL1 = 240 (4h VIP1)\nCustomAttackTime_AL3 = 0 (ilimitado VIP3)\nOffAttackExperienceRate_AL1 = 75 (EXP reducida vs activo)' },
+
+  { id:'rec-usar-2', title:'✅ AutoPick filtrado — Solo joyas para VIP', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'En un server slow el pick manual de joyas es lo más tedioso. Darlo como beneficio VIP: VIP1 pickea solo joyas, VIP2/3 pickea joyas + excellent. FREE solo pick manual. Enorme valor percibido.',
+    config:'CustomPickEnable_AL0 = 0\nCustomPickEnable_AL1 = 1 (solo joyas en CustomPick.txt)\nCustomPickEnable_AL2 = 1 (joyas + excellent)' },
+
+  { id:'rec-usar-3', title:'✅ Custom RankUser — Patentes por resets', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'Las patentes son el sistema de status social más poderoso en S3. Con anuncio global al rankear se genera hype y FOMO orgánico. Escala sugerida adaptada al server slow.',
+    config:'0r → Novato\n5r → Escudero\n15r → Caballero\n30r → Paladín\n50r → Héroe\n80r → Leyenda\n+100r → Inmortal (máximo)' },
+
+  { id:'rec-usar-4', title:'✅ Bonus Manager — Weekend EXP +50%', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'Los weekends se convierten en los momentos de grindear masivamente. Crea picos de actividad predecibles. Todos los jugadores saben que el viernes-domingo es momento de jugar.',
+    config:'Viernes 20:00 - Domingo 23:59\nBonusIndex=0 (EXP)\nBonusValue_AL0=50 (+50% free)\nBonusValue_AL3=100 (+100% VIP3)' },
+
+  { id:'rec-usar-5', title:'✅ Castle Siege con Sistema de Puntos', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'El CS moderno por puntos hace que la guerra sea más dinámica. Los guilds compiten por kills, tiempo en corona y activar switches. El guild ganador tiene el servidor.',
+    config:'CastleSiegePointSwitch=1\nCastleSiegeRankingEnable=1\nDiscordHookKill=1 (durante CS)\nCustomGuildShopSwitch=1' },
+
+  { id:'rec-usar-6', title:'✅ Discord Webhooks — Resets, CS, Invasiones', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'Conectar el servidor con un Discord público crea comunidad activa. Cada reset anunciado, cada invasión, cada cambio de rango mantiene al Discord vivo y a los jugadores volviendo.',
+    config:'DiscordHookReset=1\nDiscordHookRankUser=1\nDiscordHookInvasionStart=1\nDiscordHookMasterReset=1' },
+
+  { id:'rec-usar-7', title:'✅ Custom Daily Reward — Retención diaria', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'El jugador tiene una razón para loguear cada día aunque sea 5 minutos. En un server slow esto es crítico para la retención. Premios: pociones, zen, WCoinP (nunca WCoinC).',
+    config:'CustomDailyRewardSwitch=1\nCustomDailyRewardLevel=50\nRecompensas en Coin2 (WCoinP) y zen' },
+
+  { id:'rec-usar-8', title:'✅ Custom NPC Quest — Summoner Lore + progresión', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'Las quests del NPC guían al jugador por los mapas S3, cuentan la historia de la Summoner como clase especial, y dan recompensas en WCoinP. Diferencial narrativo único.',
+    config:'CustomNpcQuestSwitch=1\nQuestline Summoner: kill Medusas, Balrogs, Kunduns\nRecompensa final: Carta de Summoner + lore item' },
+
+  { id:'rec-usar-9', title:'✅ Invasion Manager — Golden Dragon periódico', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'Sin MuHelper, la invasión es genuinamente competitiva. El que está online en ese momento tiene ventaja real. Golden Dragon cada 3h en Lorencia crea actividad constante.',
+    config:'InvasionManagerSwitch=1\nGolden Dragon cada 3 horas\nDrop: Jewel of Creation + Box S3\nNeedOnlinePlayers=10' },
+
+  { id:'rec-usar-10', title:'✅ Personal Shop — Feel S3 auténtico', tags:['recomendacion','usar'], rec_type:'usar',
+    desc:'El comercio en Lorencia entre jugadores ES el S3. Sin esto el juego pierde la esencia. Configurar con comisión del 5% para crear un sink de zen y evitar la inflación.',
+    config:'PersonalShopSwitch=1\nPersonalShopOnlySafeZone=1\nPersonalShopMoneyCommisionRate=5\nTradeSwitch=1' },
+
+  { id:'rec-nousa-1', title:'🚫 MuHelper — No usar', tags:['recomendacion','nousa'], rec_type:'nousa',
+    desc:'Tu concepto excluye el MuHelper explícitamente y es lo correcto. El MuHelper rompe el feel S3. En cambio, el Off Attack/Off Helper VIP da el beneficio de automatización sin que el personaje esté "jugando solo" en pantalla.',
+    config:'HelperSwitch_AL0 = 0\nHelperSwitch_AL1 = 0\nHelperSwitch_AL2 = 0\nHelperSwitch_AL3 = 0' },
+
+  { id:'rec-nousa-2', title:'🚫 Market Place — Demasiado complejo para S3', tags:['recomendacion','nousa'], rec_type:'nousa',
+    desc:'El Market Place es un sistema S6/S8 de economía moderna. La comunidad S3 nostálgica prefiere el Personal Shop de toda la vida. Añadirlo crea una curva de aprendizaje innecesaria.',
+    config:'CustomMarketPlaceSwitch=0' },
+
+  { id:'rec-nousa-3', title:'🚫 Fake Online Players — Contraproducente', tags:['recomendacion','nousa'], rec_type:'nousa',
+    desc:'Si tu server promueve transparencia como diferencial, los fake players son directamente contradictorios. La comunidad S3 valora la honestidad. Si hay pocos jugadores al inicio, es normal.',
+    config:'CustomFakeOnlineSwitch=0' },
+
+  { id:'rec-nousa-4', title:'🚫 Gremory Case — Sistema de S6/S8', tags:['recomendacion','nousa'], rec_type:'nousa',
+    desc:'El Gremory Case es un sistema de S8 que rompe totalmente la estética y el feel S3. Además complica la experiencia del jugador nuevo. Los premios de eventos mejor entregan al inventario directamente.',
+    config:'GremoryCaseEnable=0\nEventItemBag drops = inventory direct (EventItemBagManager.txt)' },
+
+  { id:'rec-nousa-5', title:'🚫 Gremory Case — Sistema de S6/S8', tags:['recomendacion','nousa'], rec_type:'nousa',
+    desc:'El Gremory Case es un sistema de S8 que rompe la estética S3. Los premios de eventos mejor entregan al inventario directamente con EventItemBag.',
+    config:'GremoryCaseEnable=0' },
+
+  { id:'rec-nousa-6', title:'🚫 Battle Pass complejo — Puede saturar', tags:['recomendacion','nousa'], rec_type:'nousa',
+    desc:'Un battle pass completo puede saturar al jugador que busca la simplicidad del S3 clásico. Si lo usas, que sea muy simple (3-5 misiones semanales). El Daily Reward simple es mejor opción para retención.',
+    config:'CustomBattlePassSwitch=0 (o muy simplificado si se usa)' },
+];
+
+// ═══════════════════════════════════════════════════
+// STATE MANAGEMENT
+// ═══════════════════════════════════════════════════
+
+let state = {};
+let currentFilter = 'all';
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('mu_dashboard_v2');
+    if (saved) state = JSON.parse(saved);
+  } catch(e) { state = {}; }
+}
+
+function saveAll() {
+  try {
+    localStorage.setItem('mu_dashboard_v2', JSON.stringify(state));
+    hideUnsaved();
+    const ind = document.getElementById('saveIndicator');
+    ind.style.display = 'inline';
+    setTimeout(() => ind.style.display = 'none', 2500);
+  } catch(e) { alert('Error al guardar: ' + e.message); }
+}
+
+function getItemState(id) {
+  return state[id] || { status: 'pending', notes: '' };
+}
+
+function setItemStatus(id, status) {
+  if (!state[id]) state[id] = { status: 'pending', notes: '' };
+  state[id].status = status;
+  updateCardVisual(id, status);
+  updateAllStats();
+  saveAll();
+}
+
+function setItemNotes(id, notes) {
+  if (!state[id]) state[id] = { status: 'pending', notes: '' };
+  state[id].notes = notes;
+  showUnsaved();
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER ENGINE
+// ═══════════════════════════════════════════════════
+
+function makeCard(item, extra) {
+  const s = getItemState(item.id);
+  const status = s.status || 'pending';
+  const notes = s.notes || '';
+  const cardClass = {done:'done-card',wip:'wip-card',skip:'skip-card',pending:'pending-card',critical:(item.tags||[]).includes('critical')?'critical-card':'pending-card'}[status] || 'pending-card';
+  const checkClass = {done:'checked',wip:'wip',skip:'skip'}[status] || '';
+  const checkIcon = {done:'✓',wip:'◐',skip:'✕'}[status] || '';
+
+  const tags = (item.tags||[]).map(t => `<span class="status-badge sb-${t}">${t}</span>`).join('');
+  const statusBadge = `<span class="status-badge sb-${status}">${{done:'✓ listo',wip:'en proceso',skip:'no usar',pending:'pendiente'}[status]||status}</span>`;
+  const descPreview = item.desc ? `<div class="card-desc-preview">${item.desc.substring(0,90)}${item.desc.length>90?'...':''}</div>` : '';
+
+  let featuresHtml = '';
+  if (item.features && item.features.length) {
+    featuresHtml = '<ul style="margin-top:12px;margin-left:4px;padding-left:18px;">' +
+      item.features.map(f => `<li style="margin-bottom:7px;color:var(--text2);font-size:13.5px;line-height:1.65;font-family:'Nunito',sans-serif;">${f}</li>`).join('') + '</ul>';
+  }
+
+  let codeHtml = '';
+  if (item.code) {
+    codeHtml = `<div class="code-block-wrapper"><div class="code-block" id="code-${item.id}">${item.code}</div><button class="copy-btn" onclick="copyCode(this,'code-${item.id}')">&#10697; Copiar</button></div>`;
+  }
+
+  let varsHtml = '';
+  if (item.vars && item.vars.length) {
+    varsHtml = '<div class="card-variables">' + item.vars.map(v => `<span class="var-tag">${v}</span>`).join('') + '</div>';
+  }
+
+  let recHtml = '';
+  if (item.rec) recHtml = `<div class="rec-box rec-blue" style="margin-top:10px;"><div class="rec-text">${item.rec}</div></div>`;
+
+  let fileHtml = '';
+  if (item.file) fileHtml = `<div style="font-size:0.75rem;color:var(--gold);margin-top:8px;font-family:'JetBrains Mono',monospace;">📄 ${item.file}</div>`;
+
+  return `<div class="card ${cardClass}" id="card-${item.id}" data-id="${item.id}" data-tags="${(item.tags||[]).join(',')}" data-status="${status}">
+    <div class="card-header" onclick="toggleCard('${item.id}')">
+      <div class="card-check ${checkClass}" onclick="event.stopPropagation();cycleStatus('${item.id}')" title="Click para cambiar estado">${checkIcon}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="card-title ${status==='skip'?'strikethrough':''}">${item.title}</div>
+        ${descPreview}
+      </div>
+      <div class="card-meta">${tags}${statusBadge}</div>
+      <div class="card-expand" id="exp-${item.id}">▼</div>
+    </div>
+    <div class="card-body" id="body-${item.id}">
+      <div class="card-desc">${item.desc||''}</div>
+      ${fileHtml}${featuresHtml}${codeHtml}${varsHtml}${recHtml}
+      <div class="status-controls">
+        <span style="font-size:0.75rem;color:var(--text3);margin-right:4px;">Estado:</span>
+        <button class="sc-btn sc-done ${status==='done'?'active':''}" onclick="setItemStatus('${item.id}','done')">✓ Listo</button>
+        <button class="sc-btn sc-wip ${status==='wip'?'active':''}" onclick="setItemStatus('${item.id}','wip')">◐ En proceso</button>
+        <button class="sc-btn sc-pending ${status==='pending'?'active':''}" onclick="setItemStatus('${item.id}','pending')">⏳ Pendiente</button>
+        <button class="sc-btn sc-skip ${status==='skip'?'active':''}" onclick="setItemStatus('${item.id}','skip')">✕ No usar</button>
+      </div>
+      <div class="notes-area">
+        <div class="notes-label">📝 Mis notas</div>
+        <textarea class="notes-input" id="notes-${item.id}" placeholder="Escribe tus notas aquí..." onchange="setItemNotes('${item.id}',this.value)" oninput="setItemNotes('${item.id}',this.value)">${notes}</textarea>
+      </div>
+    </div>
+  </div>`;
+}
+
+function cycleStatus(id) {
+  const order = ['pending','wip','done','skip'];
+  const cur = (state[id]||{}).status||'pending';
+  const next = order[(order.indexOf(cur)+1)%order.length];
+  setItemStatus(id, next);
+}
+
+function updateCardVisual(id, status) {
+  const card = document.getElementById('card-'+id);
+  if (!card) return;
+  card.className = card.className.replace(/\b(done|pending|wip|skip|critical)-card\b/g,'');
+  const map = {done:'done-card',wip:'wip-card',skip:'skip-card',pending:'pending-card'};
+  card.classList.add(map[status]||'pending-card');
+  card.dataset.status = status;
+  const check = card.querySelector('.card-check');
+  check.className = 'card-check ' + ({done:'checked',wip:'wip',skip:'skip'}[status]||'');
+  check.textContent = {done:'✓',wip:'◐',skip:'✕'}[status]||'';
+  const title = card.querySelector('.card-title');
+  title.className = 'card-title' + (status==='skip'?' strikethrough':'');
+  card.querySelectorAll('.sc-btn').forEach(b => b.classList.remove('active'));
+  const btn = card.querySelector('.sc-btn.sc-'+status);
+  if (btn) btn.classList.add('active');
+  const badge = card.querySelectorAll('.status-badge');
+  badge[badge.length-1].className = `status-badge sb-${status}`;
+  badge[badge.length-1].textContent = {done:'✓ listo',wip:'en proceso',skip:'no usar',pending:'pendiente'}[status]||status;
+}
+
+function toggleCard(id) {
+  const body = document.getElementById('body-'+id);
+  const exp = document.getElementById('exp-'+id);
+  if (body.classList.toggle('open')) exp.classList.add('open');
+  else exp.classList.remove('open');
+}
+
+function expandAll(sectionId) {
+  const sec = document.getElementById(sectionId);
+  sec.querySelectorAll('.card-body').forEach(b => b.classList.add('open'));
+  sec.querySelectorAll('.card-expand').forEach(e => e.classList.add('open'));
+}
+function collapseAll(sectionId) {
+  const sec = document.getElementById(sectionId);
+  sec.querySelectorAll('.card-body').forEach(b => b.classList.remove('open'));
+  sec.querySelectorAll('.card-expand').forEach(e => e.classList.remove('open'));
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER ALL SECTIONS
+// ═══════════════════════════════════════════════════
+
+function renderAll() {
+  // Etapas
+  for (const [mes, items] of Object.entries(PROYECTO_ETAPAS)) {
+    const grp = document.getElementById('grp-'+mes);
+    if (grp) grp.innerHTML = items.map(i => makeCard(i)).join('');
+  }
+  // Equipo
+  document.getElementById('grp-equipo').innerHTML = EQUIPO_DATA.map(i=>makeCard(i)).join('');
+  // Monetizacion
+  document.getElementById('grp-monetizacion').innerHTML = MONETIZACION_DATA.map(i=>makeCard(i)).join('');
+  // Updates
+  document.getElementById('grp-updates').innerHTML = UPDATES_DATA.map(i=>makeCard(i)).join('');
+  // Server cfg
+  document.getElementById('grp-server-cfg').innerHTML = SERVER_CFG_DATA.map(i=>makeCard(i)).join('');
+  // Client cfg
+  document.getElementById('grp-client-cfg').innerHTML = CLIENT_CFG_DATA.map(i=>makeCard(i)).join('');
+  // Security
+  document.getElementById('grp-security').innerHTML = SECURITY_DATA.map(i=>makeCard(i)).join('');
+  // Events
+  document.getElementById('grp-events').innerHTML = EVENTS_DATA.map(i=>makeCard(i)).join('');
+  // Offline
+  document.getElementById('grp-offline').innerHTML = OFFLINE_DATA.map(i=>makeCard(i)).join('');
+  // Economy
+  document.getElementById('grp-economy').innerHTML = ECONOMY_DATA.map(i=>makeCard(i)).join('');
+  // Discord
+  document.getElementById('grp-discord').innerHTML = DISCORD_DATA.map(i=>makeCard(i)).join('');
+  // Recommendations
+  document.getElementById('grp-recs').innerHTML = RECS_DATA.map(i=>makeCard(i)).join('');
+  // Restore notes
+  for (const [id, s] of Object.entries(state)) {
+    const el = document.getElementById('notes-'+id);
+    if (el && s.notes) el.value = s.notes;
+  }
+  updateAllStats();
+}
+
+// ═══════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════
+
+function countStats(items) {
+  const total = items.length;
+  const done = items.filter(i => (state[i.id]||{}).status === 'done').length;
+  const pend = items.filter(i => ['pending','wip'].includes((state[i.id]||{}).status||'pending')).length;
+  return {total, done, pend};
+}
+
+function statsHtml(items) {
+  const {total,done,pend} = countStats(items);
+  return `<div class="stat-pill done"><span>✓</span>${done}</div>
+          <div class="stat-pill pending"><span>⏳</span>${pend}</div>
+          <div class="stat-pill total"><span>#</span>${total}</div>`;
+}
+
+function updateAllStats() {
+  const etapasAll = Object.values(PROYECTO_ETAPAS).flat();
+  const s = document.getElementById('stats-etapas');
+  if (s) s.innerHTML = statsHtml(etapasAll);
+  const su = document.getElementById('stats-updates');
+  if (su) su.innerHTML = statsHtml(UPDATES_DATA);
+  const ss = document.getElementById('stats-server');
+  if (ss) ss.innerHTML = statsHtml(SERVER_CFG_DATA);
+  const sc = document.getElementById('stats-client');
+  if (sc) sc.innerHTML = statsHtml(CLIENT_CFG_DATA);
+  const se = document.getElementById('stats-events');
+  if (se) se.innerHTML = statsHtml(EVENTS_DATA);
+  // main progress
+  const allItems = [...etapasAll, ...EQUIPO_DATA, ...SERVER_CFG_DATA, ...CLIENT_CFG_DATA, ...EVENTS_DATA, ...OFFLINE_DATA, ...ECONOMY_DATA];
+  const totalAll = allItems.length;
+  const doneAll = allItems.filter(i => (state[i.id]||{}).status === 'done').length;
+  const pct = totalAll > 0 ? Math.round(doneAll/totalAll*100) : 0;
+  const fill = document.getElementById('main-progress');
+  const pctEl = document.getElementById('main-pct');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = `${doneAll}/${totalAll} — ${pct}%`;
+  // Update sidebar badges
+  Object.values(SIDEBAR_CONFIG).flat().forEach(item => {
+    const badge = document.getElementById('sbbadge-' + item.id);
+    if (!badge) return;
+    const secItems = getSectionItems(item.id);
+    if (!secItems.length) return;
+    const d = secItems.filter(i => (state[i.id]||{}).status === 'done').length;
+    badge.textContent = `${d}/${secItems.length}`;
+    badge.className = d === secItems.length ? 'sidebar-badge badge-done' : 'sidebar-badge badge-count';
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// UTILITY + NEW FEATURES
+// ═══════════════════════════════════════════════════
+
+function copyCode(btn, codeId) {
+  const el = document.getElementById(codeId);
+  if (!el) return;
+  const text = el.textContent || el.innerText;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '\u2713 Copiado'; btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = '&#10697; Copiar'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => fallbackCopy(btn, text));
+  } else { fallbackCopy(btn, text); }
+}
+
+function fallbackCopy(btn, text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  btn.textContent = '\u2713 Copiado'; btn.classList.add('copied');
+  setTimeout(() => { btn.innerHTML = '&#10697; Copiar'; btn.classList.remove('copied'); }, 2000);
+}
+
+function showUnsaved() {
+  const dot = document.getElementById('autosaveDot');
+  if (dot) dot.style.display = 'block';
+}
+
+function hideUnsaved() {
+  const dot = document.getElementById('autosaveDot');
+  if (dot) dot.style.display = 'none';
+}
+
+function exportNotes() {
+  const lines = ['=== MU ONLINE S3 — NOTAS DEL PROYECTO ===', 'Exportado: ' + new Date().toLocaleString('es-AR'), ''];
+  const allData = [
+    { label: 'CRONOGRAMA / ETAPAS', items: Object.values(PROYECTO_ETAPAS).flat() },
+    { label: 'EQUIPO', items: EQUIPO_DATA },
+    { label: 'MONETIZACIÓN', items: MONETIZACION_DATA },
+    { label: 'UPDATES LOUIS 1-42', items: UPDATES_DATA },
+    { label: 'SERVER CONFIG', items: SERVER_CFG_DATA },
+    { label: 'CLIENTE', items: CLIENT_CFG_DATA },
+    { label: 'SEGURIDAD', items: SECURITY_DATA },
+    { label: 'EVENTOS', items: EVENTS_DATA },
+    { label: 'OFFLINE SYSTEMS', items: OFFLINE_DATA },
+    { label: 'ECONOMÍA', items: ECONOMY_DATA },
+    { label: 'DISCORD', items: DISCORD_DATA },
+    { label: 'RECOMENDACIONES', items: RECS_DATA },
+  ];
+  allData.forEach(({ label, items }) => {
+    const noted = items.filter(i => (state[i.id]||{}).notes && state[i.id].notes.trim());
+    if (!noted.length) return;
+    lines.push('\n─── ' + label + ' ───');
+    noted.forEach(item => {
+      lines.push('\n[' + (state[item.id].status||'pending').toUpperCase() + '] ' + item.title);
+      lines.push(state[item.id].notes);
+    });
+  });
+  const overviewNote = document.getElementById('note-overview');
+  if (overviewNote && overviewNote.value.trim()) { lines.push('\n─── NOTAS GENERALES ───'); lines.push(overviewNote.value); }
+  const infraNote = document.getElementById('note-infra');
+  if (infraNote && infraNote.value.trim()) { lines.push('\n─── INFRAESTRUCTURA ───'); lines.push(infraNote.value); }
+  const hasContent = lines.length > 3;
+  if (!hasContent) { alert('No hay notas para exportar. Escribí notas en las cards primero.'); return; }
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'mu-s3-notas-' + new Date().toISOString().split('T')[0] + '.txt';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function getSectionItems(secId) {
+  const map = {
+    'sec-etapas': Object.values(PROYECTO_ETAPAS).flat(),
+    'sec-equipo': EQUIPO_DATA,
+    'sec-monetizacion': MONETIZACION_DATA,
+    'sec-updates': UPDATES_DATA,
+    'sec-server-cfg': SERVER_CFG_DATA,
+    'sec-client-cfg': CLIENT_CFG_DATA,
+    'sec-security': SECURITY_DATA,
+    'sec-events': EVENTS_DATA,
+    'sec-offline': OFFLINE_DATA,
+    'sec-economy': ECONOMY_DATA,
+    'sec-discord': DISCORD_DATA,
+    'sec-recs': RECS_DATA,
+  };
+  return map[secId] || [];
+}
+
+// ═══════════════════════════════════════════════════
+// TABS + SIDEBAR + NAVIGATION
+// ═══════════════════════════════════════════════════
+
+const SIDEBAR_CONFIG = {
+  'proyecto': [
+    {id:'sec-overview', icon:'🎮', label:'Overview'},
+    {id:'sec-etapas', icon:'🗓', label:'Cronograma'},
+    {id:'sec-infra', icon:'🖥', label:'Infraestructura'},
+    {id:'sec-equipo', icon:'👥', label:'Equipo'},
+    {id:'sec-monetizacion', icon:'💰', label:'Monetización'},
+  ],
+  'files': [
+    {id:'sec-updates', icon:'📦', label:'Updates 1-42'},
+    {id:'sec-server-cfg', icon:'⚙️', label:'Server Config'},
+    {id:'sec-client-cfg', icon:'🖼', label:'Cliente'},
+    {id:'sec-security', icon:'🛡', label:'Seguridad'},
+    {id:'sec-events', icon:'🎪', label:'Eventos'},
+    {id:'sec-offline', icon:'🤖', label:'Offline Systems'},
+    {id:'sec-economy', icon:'💎', label:'Economía'},
+    {id:'sec-discord', icon:'💬', label:'Discord'},
+  ],
+  'recomendaciones': [
+    {id:'sec-recs', icon:'⭐', label:'Recomendaciones'},
+  ]
+};
+
+let currentTab = 'proyecto';
+let currentSection = 'sec-overview';
+
+function switchTab(tab, el) {
+  currentTab = tab;
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  renderSidebar(tab);
+  const first = (SIDEBAR_CONFIG[tab]||[])[0];
+  if (first) switchSection(first.id);
+}
+
+function renderSidebar(tab) {
+  const sb = document.getElementById('sidebar');
+  const items = SIDEBAR_CONFIG[tab] || [];
+  sb.innerHTML = items.map(item => {
+    const secItems = getSectionItems(item.id);
+    let badgeHtml = '';
+    if (secItems.length > 0) {
+      const done = secItems.filter(i => (state[i.id]||{}).status === 'done').length;
+      badgeHtml = `<span class="sidebar-badge ${done===secItems.length?'badge-done':'badge-count'}" id="sbbadge-${item.id}">${done}/${secItems.length}</span>`;
+    }
+    return `
+    <div class="sidebar-item ${item.id===currentSection?'active':''}" id="sb-${item.id}" onclick="switchSection('${item.id}')">
+      <span class="icon">${item.icon}</span>
+      <span>${item.label}</span>
+      ${badgeHtml}
+    </div>`;
+  }).join('');
+}
+
+function switchSection(secId) {
+  currentSection = secId;
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById(secId);
+  if (panel) panel.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  const sb = document.getElementById('sb-'+secId);
+  if (sb) sb.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════
+// SEARCH + FILTER
+// ═══════════════════════════════════════════════════
+
+let pendingOnlyMode = false;
+
+function doSearch(query) {
+  const q = query.toLowerCase().trim();
+  let visible = 0, total = 0;
+  document.querySelectorAll('.card').forEach(card => {
+    total++;
+    const text = card.textContent.toLowerCase();
+    const tags = (card.dataset.tags||'').toLowerCase();
+    const status = card.dataset.status || 'pending';
+    let matchQ = !q || text.includes(q);
+    let matchF = true;
+    if (pendingOnlyMode) {
+      matchF = status === 'pending' || status === 'wip';
+    } else if (currentFilter !== 'all') {
+      if (['pending','wip','done','skip'].includes(currentFilter)) matchF = status === currentFilter;
+      else matchF = tags.includes(currentFilter);
+    }
+    const show = matchQ && matchF;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  const cnt = document.getElementById('searchCount');
+  if (cnt) cnt.textContent = (q || currentFilter !== 'all' || pendingOnlyMode) ? `${visible} resultados` : '';
+  document.getElementById('no-results').classList.toggle('hidden', visible > 0 || (!q && currentFilter === 'all' && !pendingOnlyMode));
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  pendingOnlyMode = false;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  doSearch(document.getElementById('globalSearch').value);
+}
+
+function filterPendingOnly(btn) {
+  pendingOnlyMode = !pendingOnlyMode;
+  if (pendingOnlyMode) {
+    currentFilter = 'all';
+    document.querySelectorAll('.filter-btn:not(#pendingOnlyBtn)').forEach(b => b.classList.remove('active'));
+  }
+  btn.classList.toggle('active', pendingOnlyMode);
+  doSearch(document.getElementById('globalSearch').value);
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  renderAll();
+  renderSidebar('proyecto');
+  setInterval(saveAll, 30000);
+});
+</script>
+</body>
+</html>
