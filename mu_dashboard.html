@@ -413,10 +413,11 @@ body {
 .card-title {
   flex: 1;
   font-weight: 700;
-  font-size: 0.97rem;
+  font-size: 1rem;
   color: var(--text);
   letter-spacing: 0;
   font-family: 'Nunito', sans-serif;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 .card-title.strikethrough { text-decoration: line-through; color: var(--text-muted); }
 .card-meta {
@@ -536,13 +537,16 @@ body {
 /* ── NOTES AREA ── */
 .notes-area { margin-top: 14px; }
 .notes-label {
-  font-size: 0.68rem;
-  letter-spacing: 2.5px;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--text3);
-  margin-bottom: 7px;
+  color: var(--text2);
+  margin-bottom: 8px;
   font-weight: 700;
   font-family: 'Cinzel', serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .notes-input {
   width: 100%;
@@ -592,22 +596,20 @@ body {
 .group-container { margin-bottom: 30px; }
 .group-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.68rem;
-  letter-spacing: 3.5px;
+  font-size: 0.78rem;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold2);
   margin-bottom: 14px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(240,192,64,0.2);
+  padding: 10px 14px;
+  background: linear-gradient(90deg, rgba(240,192,64,0.1) 0%, transparent 100%);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 6px 6px 0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  text-shadow: 0 0 10px rgba(240,192,64,0.3);
-}
-.group-label::before {
-  content: '◈';
-  font-size: 0.6rem;
-  opacity: 0.7;
+  gap: 10px;
+  text-shadow: 0 0 12px rgba(240,192,64,0.4);
+  font-weight: 700;
 }
 
 /* ── PROGRESS BAR ── */
@@ -615,19 +617,24 @@ body {
   background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%);
   border: 1px solid var(--border-gold);
   border-radius: 10px;
-  padding: 20px 24px;
+  padding: 22px 26px;
   margin-bottom: 26px;
-  box-shadow: 0 0 30px rgba(240,192,64,0.06);
+  box-shadow: 0 0 30px rgba(240,192,64,0.08);
 }
 .progress-title {
-  font-size: 0.72rem;
-  color: var(--text3);
-  margin-bottom: 12px;
+  font-size: 0.78rem;
+  margin-bottom: 14px;
   letter-spacing: 3px;
   text-transform: uppercase;
   font-family: 'Cinzel', serif;
-  color: var(--gold-dim);
+  color: var(--gold2);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(240,192,64,0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+.progress-title::before { content: '⚡'; font-size: 1rem; }
 .progress-track {
   background: rgba(0,0,0,0.4);
   height: 14px;
@@ -649,13 +656,13 @@ body {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
-.progress-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text3); }
-.progress-pct { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 700; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+.progress-pct { font-family: 'JetBrains Mono', monospace; color: var(--gold3); font-weight: 800; font-size: 0.9rem; text-shadow: 0 0 10px rgba(240,192,64,0.4); }
 
 /* ── INFO GRID ── */
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin-bottom: 28px;
 }
@@ -743,8 +750,22 @@ body {
   font-family: 'Nunito', sans-serif;
 }
 .cost-table tr:hover td { background: rgba(240,192,64,0.04); }
-.cost-value { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 700; }
+.cost-value { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 700; font-size: 0.95rem; }
+.cost-value.free { color: var(--green2); }
 .cost-note { font-size: 0.78rem; color: var(--text3); }
+.cost-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 9px;
+  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+  white-space: nowrap;
+}
+.cost-badge.once    { background: rgba(240,192,64,0.14); border: 1px solid rgba(240,192,64,0.3);  color: var(--gold); }
+.cost-badge.monthly { background: rgba(56,178,245,0.14); border: 1px solid rgba(56,178,245,0.3);  color: var(--blue2); }
+.cost-badge.annual  { background: rgba(192,132,252,0.14);border: 1px solid rgba(192,132,252,0.3); color: var(--purple2); }
+.cost-badge.free    { background: rgba(34,221,122,0.14); border: 1px solid rgba(34,221,122,0.3);  color: var(--green2); }
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -757,7 +778,6 @@ body {
 .highlight { background: rgba(240,192,64,0.25) !important; border-radius: 3px; outline: 1px solid rgba(240,192,64,0.3); }
 
 /* ── ORNAMENT SEPARATOR ── */
-.group-label { position: relative; }
 .section-separator {
   text-align: center;
   color: var(--gold);
@@ -770,16 +790,17 @@ body {
 
 /* ── CARD DESCRIPTION PREVIEW ── */
 .card-desc-preview {
-  font-size: 12.5px;
-  color: var(--text3);
+  font-size: 13px;
+  color: var(--text2);
   margin-top: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 520px;
+  max-width: 540px;
   font-family: 'Nunito', sans-serif;
   font-weight: 500;
   display: block;
+  opacity: 0.85;
 }
 .card.expanded .card-desc-preview { display: none; }
 
@@ -801,6 +822,97 @@ body {
 .rec-title.rc-red   { color: var(--red2); }
 .rec-title.rc-blue  { color: var(--blue2); }
 .rec-text { font-size: 0.9rem; color: var(--text2); line-height: 1.7; font-weight: 500; font-family: 'Nunito', sans-serif; }
+
+/* ── INFRA SUMMARY ── */
+.infra-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.infra-sum-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.infra-sum-item:hover { border-color: var(--gold); box-shadow: 0 0 14px rgba(240,192,64,0.08); }
+.infra-sum-icon { font-size: 1.5rem; }
+.infra-sum-label { font-size: 0.65rem; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Cinzel', serif; margin-bottom: 4px; }
+.infra-sum-value { font-size: 0.92rem; color: var(--gold2); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+/* ── PAYMENT ICONS ── */
+.payment-icons-panel {
+  background: linear-gradient(135deg, rgba(34,221,122,0.05) 0%, rgba(20,29,46,0.7) 100%);
+  border: 1px solid rgba(34,221,122,0.2);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+}
+.payment-icon-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green2);
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+.payment-icons-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.payment-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  transition: border-color 0.2s, background 0.2s;
+}
+.payment-chip:hover { background: rgba(255,255,255,0.07); border-color: var(--green2); }
+.payment-note {
+  font-size: 0.78rem;
+  color: var(--text3);
+  font-family: 'Nunito', sans-serif;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* ── ROLES PANEL ── */
+.roles-panel {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.role-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  cursor: default;
+}
+.role-admin  { background: rgba(255,77,77,0.14);   border: 1px solid rgba(255,77,77,0.3);   color: var(--red2); }
+.role-cm     { background: rgba(192,132,252,0.14); border: 1px solid rgba(192,132,252,0.3); color: var(--purple2); }
+.role-gm     { background: rgba(240,192,64,0.14);  border: 1px solid rgba(240,192,64,0.3);  color: var(--gold); }
+.role-tester { background: rgba(34,211,238,0.14);  border: 1px solid rgba(34,211,238,0.3);  color: var(--cyan2); }
 
 /* ── BULK ACTIONS ── */
 .bulk-actions {
@@ -965,7 +1077,7 @@ body {
 
         <div class="timeline">
           <div class="timeline-item future" id="tl-mes0">
-            <div class="group-label">MES 0 — INVERSIÓN INICIAL · Costo: ~$400 USD</div>
+            <div class="group-label">💰 MES 0 — INVERSIÓN INICIAL · Costo: ~$400 USD</div>
           </div>
         </div>
 
@@ -975,28 +1087,28 @@ body {
 
         <div class="timeline">
           <div class="timeline-item future" id="tl-mes1">
-            <div class="group-label">MES 1 — SETUP Y CONFIGURACIÓN · VPS activo · Primeros Ads</div>
+            <div class="group-label">⚙️ MES 1 — SETUP Y CONFIGURACIÓN · VPS activo · Primeros Ads</div>
           </div>
         </div>
         <div class="group-container" id="grp-mes1"></div>
 
         <div class="timeline">
           <div class="timeline-item future" id="tl-mes2">
-            <div class="group-label">MES 2 — ALPHA / CLOSED BETA · 1-2 Testers · Balance PvP</div>
+            <div class="group-label">🧪 MES 2 — ALPHA / CLOSED BETA · 1-2 Testers · Balance PvP</div>
           </div>
         </div>
         <div class="group-container" id="grp-mes2"></div>
 
         <div class="timeline">
           <div class="timeline-item future" id="tl-mes3">
-            <div class="group-label">MES 3 — OPEN BETA · Stress test · Publicidad fuerte</div>
+            <div class="group-label">🌐 MES 3 — OPEN BETA · Stress test · Publicidad fuerte</div>
           </div>
         </div>
         <div class="group-container" id="grp-mes3"></div>
 
         <div class="timeline">
           <div class="timeline-item future" id="tl-mes4">
-            <div class="group-label">MES 4 — GRAND OPENING · Viernes ~20:00hs · Meta: 100+ usuarios</div>
+            <div class="group-label">🚀 MES 4 — GRAND OPENING · Viernes ~20:00hs · Meta: 100+ usuarios</div>
           </div>
         </div>
         <div class="group-container" id="grp-mes4"></div>
@@ -1012,17 +1124,48 @@ body {
           </div>
         </div>
 
+        <div class="infra-summary">
+          <div class="infra-sum-item">
+            <span class="infra-sum-icon">💰</span>
+            <div>
+              <div class="infra-sum-label">Inversión inicial</div>
+              <div class="infra-sum-value">~$400 USD</div>
+            </div>
+          </div>
+          <div class="infra-sum-item">
+            <span class="infra-sum-icon">📅</span>
+            <div>
+              <div class="infra-sum-label">Costo mensual</div>
+              <div class="infra-sum-value">~$80/mes</div>
+            </div>
+          </div>
+          <div class="infra-sum-item">
+            <span class="infra-sum-icon">🌎</span>
+            <div>
+              <div class="infra-sum-label">Región VPS</div>
+              <div class="infra-sum-value">São Paulo 🇧🇷</div>
+            </div>
+          </div>
+          <div class="infra-sum-item">
+            <span class="infra-sum-icon">🛡️</span>
+            <div>
+              <div class="infra-sum-label">Protección</div>
+              <div class="infra-sum-value">Anti-DDoS Game</div>
+            </div>
+          </div>
+        </div>
+
         <table class="cost-table">
           <thead>
             <tr><th>Componente</th><th>Proveedor</th><th>Costo</th><th>Tipo</th><th>Notas</th></tr>
           </thead>
           <tbody>
-            <tr><td>Files + Licencia Louis</td><td>jogandomu.com.br</td><td class="cost-value">$300</td><td>Pago único</td><td class="cost-note">GameServer + ConnectServer + Antihack MHP + Editor</td></tr>
-            <tr><td>VPS Game Server</td><td>OVH São Paulo</td><td class="cost-value">$65/mes</td><td>Mensual</td><td class="cost-note">DDoS Game en puerto 55901 · IP Brasilera = menor ping LatAm</td></tr>
-            <tr><td>Web Hosting</td><td>WebEngine CMS</td><td class="cost-value">$15/mes</td><td>Mensual</td><td class="cost-note">Windows + PHP + vinculación SQL Server</td></tr>
-            <tr><td>Diseño gráfico</td><td>JanoDesign (o similar)</td><td class="cost-value">$100</td><td>Pago único</td><td class="cost-note">Logo + Banner + Portada FB + Web Template</td></tr>
-            <tr><td>SQL Server 2014</td><td>Microsoft</td><td class="cost-value">$0</td><td>Developer/Express</td><td class="cost-note">Version Express es gratuita para uso en servidor</td></tr>
-            <tr><td>Dominio .com</td><td>Namecheap/GoDaddy</td><td class="cost-value">~$12/año</td><td>Anual</td><td class="cost-note">Necesario para credibilidad y web CMS</td></tr>
+            <tr><td>🎮 Files + Licencia Louis</td><td>jogandomu.com.br</td><td class="cost-value">$300</td><td><span class="cost-badge once">Pago único</span></td><td class="cost-note">GameServer + ConnectServer + Antihack MHP + Editor</td></tr>
+            <tr><td>🖥️ VPS Game Server</td><td>OVH São Paulo</td><td class="cost-value">$65/mes</td><td><span class="cost-badge monthly">Mensual</span></td><td class="cost-note">DDoS Game en puerto 55901 · IP Brasilera = menor ping LatAm</td></tr>
+            <tr><td>🌐 Web Hosting</td><td>WebEngine CMS</td><td class="cost-value">$15/mes</td><td><span class="cost-badge monthly">Mensual</span></td><td class="cost-note">Windows + PHP + vinculación SQL Server</td></tr>
+            <tr><td>🎨 Diseño gráfico</td><td>JanoDesign (o similar)</td><td class="cost-value">$100</td><td><span class="cost-badge once">Pago único</span></td><td class="cost-note">Logo + Banner + Portada FB + Web Template</td></tr>
+            <tr><td>🗄️ SQL Server 2014</td><td>Microsoft</td><td class="cost-value free">$0</td><td><span class="cost-badge free">Gratis</span></td><td class="cost-note">Version Express es gratuita para uso en servidor</td></tr>
+            <tr><td>🔗 Dominio .com</td><td>Namecheap/GoDaddy</td><td class="cost-value">~$12/año</td><td><span class="cost-badge annual">Anual</span></td><td class="cost-note">Necesario para credibilidad y web CMS</td></tr>
           </tbody>
         </table>
 
@@ -1041,6 +1184,12 @@ body {
             <p>Roles necesarios para que el servidor no dependa de una sola persona</p>
           </div>
         </div>
+        <div class="roles-panel">
+          <div class="role-chip role-admin">🛡️ Admin Técnico</div>
+          <div class="role-chip role-cm">📣 Community Manager</div>
+          <div class="role-chip role-gm">⚔️ Game Master</div>
+          <div class="role-chip role-tester">🧪 Beta Tester</div>
+        </div>
         <div class="group-container" id="grp-equipo"></div>
       </div>
 
@@ -1053,6 +1202,38 @@ body {
             <p>Modelo Play2Win — XShop cosmético/utilidad. Sin items OP</p>
           </div>
         </div>
+
+        <div class="payment-icons-panel">
+          <div class="payment-icon-title">💳 Métodos de Pago Aceptados</div>
+          <div class="payment-icons-row">
+            <div class="payment-chip">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a1f71"/><text x="2" y="17" font-size="10" fill="#fff" font-weight="bold">VISA</text></svg>
+              <span>Visa</span>
+            </div>
+            <div class="payment-chip">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#eb001b"/><circle cx="9" cy="12" r="6" fill="#eb001b"/><circle cx="15" cy="12" r="6" fill="#f79e1b"/><path d="M12 7.5a6 6 0 0 1 0 9 6 6 0 0 1 0-9z" fill="#ff5f00"/></svg>
+              <span>Mastercard</span>
+            </div>
+            <div class="payment-chip">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#009cde"/><text x="2" y="17" font-size="8" fill="#fff" font-weight="bold">PayPal</text></svg>
+              <span>PayPal</span>
+            </div>
+            <div class="payment-chip">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#f7931a"/><text x="4" y="16" font-size="10" fill="#fff" font-weight="bold">₿</text></svg>
+              <span>Crypto</span>
+            </div>
+            <div class="payment-chip">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00b9f1"/><text x="2" y="16" font-size="7.5" fill="#fff" font-weight="bold">MercPago</text></svg>
+              <span>MercadoPago</span>
+            </div>
+            <div class="payment-chip">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#2c9341"/><text x="4" y="16" font-size="8" fill="#fff" font-weight="bold">CBU</text></svg>
+              <span>Transfer / CBU</span>
+            </div>
+          </div>
+          <div class="payment-note">Los pagos en USD se realizan por cualquiera de estos medios. WCoins se acreditan manualmente dentro de las 24hs hábiles.</div>
+        </div>
+
         <div class="group-container" id="grp-monetizacion"></div>
       </div>
 
