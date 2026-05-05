@@ -1203,6 +1203,7 @@ body {
   <div class="main-tab active" onclick="switchTab('proyecto',this)">📋 PROYECTO S3</div>
   <div class="main-tab" onclick="switchTab('files',this)">⚙️ LOUIS EMULATOR FILES</div>
   <div class="main-tab" onclick="switchTab('recomendaciones',this)">⭐ RECOMENDACIONES</div>
+  <div class="main-tab" onclick="switchTab('testing',this)">🛡️ PROTOCOLO DE TESTEO</div>
 </div>
 
 <div class="content">
@@ -1589,6 +1590,24 @@ body {
       </div>
     </div>
 
+    <div class="tab-content" id="tab-testing">
+      <div class="section-panel active" id="sec-testing">
+        <div class="section-header">
+          <div class="section-icon">🛡️</div>
+          <div class="section-title">
+            <h2>PROTOCOLO DE TESTEO — OPEN BETA</h2>
+            <p>Checklist de pruebas críticas antes del lanzamiento. Marca cada ítem cuando sea verificado.</p>
+          </div>
+          <div class="section-stats" id="stats-testing"></div>
+        </div>
+        <div class="rec-box" style="margin-bottom:18px;">
+          <div class="rec-title">📍 Cómo usar este protocolo</div>
+          <div class="rec-text">Cada card representa un área de prueba. Abírla para ver el checklist detallado y los valores esperados. Marca como <strong style="color:var(--green2)">Listo</strong> cuando esté verificado, <strong style="color:var(--blue2)">En Proceso</strong> cuando estés pruebando, o deja <strong style="color:var(--gold)">Pendiente</strong> lo que aún no probaste. Usa las notas para registrar los resultados reales.</div>
+        </div>
+        <div id="grp-testing"></div>
+      </div>
+    </div>
+
     <div id="no-results" class="no-results hidden">
       <div class="nr-icon">🔍</div>
       <div class="nr-text">No se encontraron resultados para tu búsqueda</div>
@@ -1629,6 +1648,7 @@ const PROYECTO_ETAPAS = {
     { id:'m1-15', title:'Configurar Backups automáticos cada 6h', tags:['server'], desc:'Script que copie la carpeta MuServer + base de datos SQL a Google Drive o MEGA cada 6 horas. Un fallo de BD puede destruir 2 meses de progreso de jugadores.' },
     { id:'m1-16', title:'Configurar sitio web (WebEngine CMS)', tags:['web'], desc:'Instalar WebEngine, vincular con BD SQL, configurar registro de usuarios, ranking, tienda de WCoins, noticias. Activar SSL (HTTPS) para seguridad.' },
     { id:'m1-17', title:'Primeros anuncios en Facebook/TikTok', tags:['marketing'], desc:'Publicar imágenes del servidor, anunciar la fecha de Open Beta. FB Ads básico: hombres 22-40 años, interesados en "MU Online", "juegos clásicos MMORPG". Presupuesto: $30-50 USD.' },
+    { id:'m1-18', title:'ChaosMix.dat configurado al 100%', tags:['server','done'], desc:'ChaosMix.dat completamente auditado y configurado: Alas Nivel 1 (80% éxito), Alas Nivel 2 (50%), Alas Nivel 3 (30%). Joyas de Creación configuradas como ingrediente en combinaciones de alas altas. Todas las recetas verificadas en servidor de prueba local.' },
   ],
   'mes2': [
     { id:'m2-1', title:'Invitar 1-2 beta testers externos con experiencia', tags:['testing'], desc:'Buscar jugadores old-school de comunidades MU LatAm (Facebook, Discord). Experiencia necesaria: conocimiento de balance S3, capacidad de reportar bugs específicos.' },
@@ -1793,6 +1813,21 @@ const SERVER_CFG_DATA = [
     desc:'Tasas de éxito de joyas y combinaciones del Chaos Machine por nivel VIP.',
     features:['SoulSuccessRate_AL0~3 — % éxito Joya del Alma por VIP','LifeSuccessRate_AL0~3 — % éxito Joya de Vida por VIP','HarmonySuccessRate_AL0~3 — % éxito Joya de Armonía por VIP','AddLuckSuccessRate1_AL0~3 — Bonus de suerte por VIP','PlusItemLevelMixRate1~6_AL0~3 — Rate de upgrade +10 a +15 por VIP','Wing2MixRate_AL0~3 — Rate de crear Alas Nivel 2 por VIP','Wing1MixRate_AL0~3 — Rate de crear Alas Nivel 1 por VIP','FruitMixRate_AL0~3 — Rate de crear Fruta por VIP'],
     code:'// Rates S3 auténticos + pequeño bonus VIP\nSoulSuccessRate_AL0 = 60\nSoulSuccessRate_AL1 = 65\nSoulSuccessRate_AL2 = 70\nSoulSuccessRate_AL3 = 75\n\nLifeSuccessRate_AL0 = 80\nLifeSuccessRate_AL1 = 83\n\n// Upgrade alto nivel es desafío real\nPlusItemLevelMixRate5_AL0 = 45\nPlusItemLevelMixRate6_AL0 = 30' },
+
+  { id:'scfg-11', title:'⚙️ PENDIENTE — Drops de Joyas en Common.dat', tags:['server','economy','pendiente'], file:'Common.dat',
+    desc:'Configurar los rates de drop de joyas (Bless, Soul, Chaos) en todos los mapas S3. En S3 clásico las joyas son el corazón de la economía — deben ser escasas pero alcanzables. Sin una configuración adecuada los jugadores acumulan joyas demasiado rápido y se destruye el valor del upgrade.',
+    features:['JewelDropRate (Bless) — Ajustar por rango de mapa: Lost Tower > Atlans > Tarkan','JewelDropRate (Soul) — Debe ser más común que Bless (70% de los upgrades lo usan)','JewelDropRate (Chaos) — Necesaria para el Chaos Machine, ajustar con cuidado','JewelDropRate (Life) — Rara y valiosa, principalmente en mapas finales','MoneyAmountDropRate — Zen drop bajo (<1000 por mob) para economía medium-slow','Verificar que los monstruos básicos de Lorencia/Noria casi no dropeen joyas'],
+    code:'// Referencia de rates S3 auténtico\n// Estos valores deben ajustarse en\n// Common.dat y ItemDropFile.txt\nJewelDropRate_Bless = 3    // 3% en Lorencia\nJewelDropRate_Soul  = 5    // 5% en Lorencia\nJewelDropRate_Chaos = 2    // 2% general\nJewelDropRate_Life  = 1    // 1% mapas altos\nMoneyAmountDropRate = 40   // Zen muy bajo' },
+
+  { id:'scfg-12', title:'⚙️ PENDIENTE — Limpieza del XShop (solo consumibles)', tags:['server','monetizacion','pendiente'], file:'CashShop.dat',
+    desc:'El XShop debe contener ÚNICAMENTE consumibles y cosméticos. Ningún item debe dar ventaja en PvP o acelerar el progression. Un XShop mal configurado destruye la reputación del servidor en las primeras horas de la Beta.',
+    features:['✅ PERMITIDO: Días VIP, pociones grandes, scrolls de teleport','✅ PERMITIDO: Cosméticos (glows, wings skins), rename, changeclass','✅ PERMITIDO: Packs de WCoinP, slots de almacenamiento extra','🚫 PROHIBIDO: Sets de equipo, armas, wings reales, joyas en exceso','🚫 PROHIBIDO: Cualquier item que dé stats directos en PvP','Revisar item por item en CashShop.dat antes del Open Beta'],
+    code:'// CashShop.dat — verificar cada entrada\n// Ejemplo de items PERMITIDOS:\nItem1 = VIP_Day1 WCoinC=50\nItem2 = BlessingPotion_Large WCoinP=10\nItem3 = TeleportScroll WCoinP=5\nItem4 = RenameScroll WCoinC=200\n\n// Items a ELIMINAR/COMENTAR:\n// Item99 = SetExcellent_Dark (¡eliminar!)\n// Item100 = SoulMaster_Wings (¡eliminar!)' },
+
+  { id:'scfg-13', title:'⚙️ PENDIENTE — Ajuste de Bosses para pelea grupal', tags:['server','balance','pendiente'], file:'MonsterSetBase.txt',
+    desc:'Selupan y Kundun deben ser peleas de guild/party, no farmeables en solitario. En S3 con stats personalizados los personajes pueden volverse demasiado poderosos. Ajustar HP y daño para que requieran 5-10 jugadores coordinados en resets medios.',
+    features:['Selupan — Boss de Kanturu. HP target: ~15-20M. Daño: mate a personaje BK +15 en 3-4 hits','Kundun — Boss final S3. HP target: ~25-30M. Requiere party coordinada con cleric','Reducir HP si en pruebas se lleva solo con 1 personaje de 20+ resets','Balancear Damage Reduction para que los tanques tengan ventaja real','Activar KundunHPRegen para regenerar HP si no hay presión constante','Dropear Jewel of Creation y Box of Kundun al 100% (recompensa justa)'],
+    code:'// MonsterSetBase.txt — Selupan y Kundun\n// Multiplicadores aproximados (ajustar en pruebas):\nMonsterHP_Selupan = 15000000\nMonsterDamage_Selupan = 3500\nMonsterHP_Kundun5 = 28000000\nMonsterDamage_Kundun5 = 4500\nKundunHPRegen = 1\n// Verificar con 3-5 jugadores de 15-25 resets' },
 ];
 
 const CLIENT_CFG_DATA = [
@@ -2012,6 +2047,40 @@ const RECS_DATA = [
 ];
 
 // ═══════════════════════════════════════════════════
+// BETA TESTING PROTOCOL
+// ═══════════════════════════════════════════════════
+
+const BETA_TESTING_DATA = [
+  { id:'bt-1', title:'🎲 Auditoría Chaos Machine — Tasas de Alas', tags:['testing','server'], desc:'Verificar que las tasas de éxito del Chaos Machine para creación de Alas sean correctas y que los ingredientes sean los definidos.',
+    features:['Crear Alas Nivel 1 (80% éxito esperado) — probar 20 veces y anotar resultados','Crear Alas Nivel 2 (50% éxito esperado) — probar 10 veces y registrar fallos','Crear Alas Nivel 3 (30% éxito esperado) — probar 5 veces con equipo premium','Verificar que las combinaciones de Alas N3 requieran Joya de Creación','Confirmar que en caso de fallo se consume el ingrediente principal','Comparar tasa real vs tasa configurada en ChaosMix.dat'],
+    code:'// Resultados esperados (sobre N pruebas):\n// Alas S1: ~16/20 éxitos (80%)\n// Alas S2: ~5/10  éxitos (50%)\n// Alas S3: ~1-2/5 éxitos (30%)\n// Anotar desvíos > ±15% para reajustar' },
+
+  { id:'bt-2', title:'💰 Economía de Zen — Lorencia & NPCs', tags:['testing','economy'], desc:'Validar que la economía de Zen sea lenta y desafiante. El jugador no debe acumular Zen fácilmente, y vender al NPC debe ser un recurso de emergencia, no una estrategia.',
+    features:['Farmear 30 minutos en Lorencia con personaje nuevo — anotar Zen total obtenido','Verificar que el drop de Zen por mob sea < 1000 (idealmente 100-500)','Vender 5 items comunes al NPC y verificar que el pago sea ~5% del valor real','Verificar que no sea posible resetear sin días de farmeo activo (anti-trivial)','Testear Personal Shop: poner tienda en Lorencia con joyas, verificar que haya demanda','Confirmar que MoneyAmountDropRate esté bajo y genere tensión económica saludable'],
+    code:'// Zen por hora esperado (personaje nuevo, Lorencia):\n// Target: 200.000 - 500.000 zen/hora\n// Si supera 1.000.000/hora -> reducir MoneyAmountDropRate\n// Reset cuesta 10.000.000 -> debe tardar ~10-20h de farmeo' },
+
+  { id:'bt-3', title:'⚔️ Balance PvP — BK vs All / Summoner', tags:['testing','balance'], desc:'Verificar que el BK (Dark Knight) no sea dominante absoluto. La Summoner debe ser competitiva en mapas altos a pesar de ser una clase de temporadas posteriores.',
+    features:['Crear BK con 32.768 stats totales y enfrentar cada clase (DW, FE, MG, DL, SU)','Registrar resultados: victorias, derrotas, porcentaje por combinación','El BK no debe ganar más del 60% de los enfrentamientos cross-class','Testear Summoner en Atlans 3 y Tarkan 2 — debe ser viable con party de 5','Comparar DPS de Summoner vs BK vs FE en monstruos de mapa alto','Si BK domina: ajustar DKDamageRatePvP y DKDamageRateToFE en Character.dat'],
+    code:'// Objetivo de balance (estimado):\n// BK vs DW:  BK gana 55% (ok)\n// BK vs FE:  BK gana 50% (ok)\n// BK vs MG:  BK gana 45% (MG tiene ventaja ranged)\n// BK vs SU:  BK gana 60% MAX (Summoner tiene buffs de party)\n// Si BK supera 65% en algún match -> rebalancear' },
+
+  { id:'bt-4', title:'🗺️ Rutas y Moves — Menú M y Spots', tags:['testing','client'], desc:'Verificar que el menú de Movimiento (M) solo muestre los mapas de S3 clásico, sin zonas de temporadas posteriores ni mapas no configurados.',
+    features:['Abrir menú Move (M) y confirmar que Arena y LaCleon NO aparezcan en la lista','Verificar que Tarkan 1 y Tarkan 2 sean accesibles y spawnen monstruos correctos','Confirmar que Aida funcione correctamente con sus monstruos y spawns','Verificar que Icarus sea accesible y que el spawn del boss esté configurado','Testear que Crywolf no aparezca (es de S4+) o esté correctamente bloqueado','Confirmar gates entre mapas: Lorencia → Dungeon → LostTower → Atlans → Tarkan'],
+    code:'// Checklist de mapas S3 auténticos:\n// ✓ Lorencia (0), Noria (3), Devias (2)\n// ✓ Dungeon 1-3 (1), Lost Tower 1-6 (4)\n// ✓ Atlans 1-3 (7), Tarkan 1-2 (8)\n// ✓ Icarus (10), Aida (33)\n// ✗ Arena (6) — DEBE estar borrado del menú M\n// ✗ LaCleon (34) — DEBE estar borrado del menú M' },
+
+  { id:'bt-5', title:'💬 Comandos — /reset, /pkclear, /attack, /pick', tags:['testing','server'], desc:'Testear que todos los comandos de gameplay funcionen correctamente con sus costos y restricciones.',
+    features:['/reset — Debe pedir nivel 400 (FREE) y costo de 10.000.000 Zen','Después del /reset verificar que el personaje baje a nivel 1 y conserve los puntos extras','Verificar que los resets se contabilicen correctamente en el RankUser (patentes)','/pkclear — Debe pedir 50.000.000 Zen. Verificar que limpie el estado PK del personaje','/attack — Activa Off Attack (solo VIP). FREE debe recibir mensaje de error','/pick (joyas) — Solo activa para VIP1+. FREE debe recibir mensaje de no disponible','Testear límite de resets por día (CommandResetLimitDay) — no debe superar el configurado'],
+    code:'// Comandos a probar en orden:\n// 1. /reset (nivel 400, 10M zen)\n// 2. Verificar resets++ en stats\n// 3. /pkclear (50M zen, estado PK limpio)\n// 4. /attack (FREE: error, VIP1: activa)\n// 5. /pick jewel (FREE: error, VIP1: activa)\n// 6. Intentar 3er reset el mismo día -> debe bloquear' },
+
+  { id:'bt-6', title:'🎁 Medallas y Boxes — Drop rates de items', tags:['testing','economy'], desc:'Validar que las Silver Medal y Gold Medal dropeen items de calidad apropiada para S3. Los drops deben ser valiosos pero no triviales.',
+    features:['Obtener y abrir 50 Silver Medals — anotar cada item obtenido y su nivel','Obtener y abrir 50 Gold Medals — anotar cada item obtenido (deben ser mejores que Silver)','Confirmar que los items salgan entre +5 y +9 en promedio (no +0 ni +13)','Verificar que la mayoría tenga opción Luck o una option adicional','Confirmar que algunos items tengan la opción Excellent (rara, < 20%)','Si los drops son demasiado buenos (Excellent +9 frecuente) -> reducir rate en ItemBag.dat'],
+    code:'// Resultados esperados (100 cajas total):\n// Items +0 a +4:  < 10%  (muy malo)\n// Items +5 a +7:  ~50%   (bueno para Silver)\n// Items +8 a +9:  ~35%   (bueno para Gold)\n// Items +10+:     < 5%   (rareza)\n// Con Luck:       ~30%\n// Con 1 Option:   ~60%\n// Excellent:      ~15%   (atractivo sin ser trivial)' },
+
+  { id:'bt-7', title:'🤖 Off-Attack — Límites VIP y penalización EXP', tags:['testing','vip'], desc:'Verificar que el Off Attack respete los límites horarios por nivel VIP y aplique la penalización de EXP correctamente.',
+    features:['Activar /attack con personaje VIP1 — debe desconectarse exactamente a las 6 horas','Activar /attack con personaje VIP2 — límite de 8 horas (o según configurado)','Activar /attack con personaje VIP3 — debe ser ilimitado (0 = sin límite)','Confirmar que la EXP del Off Attack sea -20% vs EXP activa (OffAttackExperienceRate)','Verificar Auto-Resume: reiniciar el GameServer y confirmar que el Off Attack se reanuda','Verificar que al vencer el VIP, el Off Attack se detenga inmediatamente'],
+    code:'// Configuración objetivo en Custom.dat:\nCustomAttackTime_AL0 = 0     // FREE: sin off-attack\nCustomAttackTime_AL1 = 360   // VIP1: 6 horas (min)\nCustomAttackTime_AL2 = 480   // VIP2: 8 horas\nCustomAttackTime_AL3 = 0     // VIP3: ilimitado\n\n// Penalización EXP:\nOffAttackExperienceRate_AL1 = 80  // -20% vs activo\nOffAttackExperienceRate_AL3 = 90  // -10% para VIP3' },
+];
+
+// ═══════════════════════════════════════════════════
 // STATE MANAGEMENT
 // ═══════════════════════════════════════════════════
 
@@ -2023,6 +2092,11 @@ function loadState() {
     const saved = localStorage.getItem('mu_dashboard_v2');
     if (saved) state = JSON.parse(saved);
   } catch(e) { state = {}; }
+  // Tareas confirmadas como completadas — solo setean 'done' si aún no existen en el estado guardado
+  const DONE_DEFAULTS = ['m0-1', 'm0-2', 'm1-1', 'm1-2', 'm1-18'];
+  DONE_DEFAULTS.forEach(id => {
+    if (!state[id]) state[id] = { status: 'done', notes: '' };
+  });
 }
 
 function saveAll() {
@@ -2214,6 +2288,8 @@ function renderAll() {
   document.getElementById('grp-discord').innerHTML = DISCORD_DATA.map(i=>makeCard(i)).join('');
   // Recommendations
   document.getElementById('grp-recs').innerHTML = RECS_DATA.map(i=>makeCard(i)).join('');
+  // Beta Testing Protocol
+  document.getElementById('grp-testing').innerHTML = BETA_TESTING_DATA.map(i=>makeCard(i)).join('');
   // Restore notes
   for (const [id, s] of Object.entries(state)) {
     const el = document.getElementById('notes-'+id);
@@ -2252,8 +2328,10 @@ function updateAllStats() {
   if (sc) sc.innerHTML = statsHtml(CLIENT_CFG_DATA);
   const se = document.getElementById('stats-events');
   if (se) se.innerHTML = statsHtml(EVENTS_DATA);
-  // main progress
-  const allItems = [...etapasAll, ...EQUIPO_DATA, ...SERVER_CFG_DATA, ...CLIENT_CFG_DATA, ...EVENTS_DATA, ...OFFLINE_DATA, ...ECONOMY_DATA];
+  const st = document.getElementById('stats-testing');
+  if (st) st.innerHTML = statsHtml(BETA_TESTING_DATA);
+  // main progress — incluye etapas, equipo, server cfg, client cfg, eventos, offline, economía y testing
+  const allItems = [...etapasAll, ...EQUIPO_DATA, ...SERVER_CFG_DATA, ...CLIENT_CFG_DATA, ...EVENTS_DATA, ...OFFLINE_DATA, ...ECONOMY_DATA, ...BETA_TESTING_DATA];
   const totalAll = allItems.length;
   const doneAll = allItems.filter(i => (state[i.id]||{}).status === 'done').length;
   const pct = totalAll > 0 ? Math.round(doneAll/totalAll*100) : 0;
@@ -2372,6 +2450,7 @@ function getSectionItems(secId) {
     'sec-economy': ECONOMY_DATA,
     'sec-discord': DISCORD_DATA,
     'sec-recs': RECS_DATA,
+    'sec-testing': BETA_TESTING_DATA,
   };
   return map[secId] || [];
 }
@@ -2400,6 +2479,9 @@ const SIDEBAR_CONFIG = {
   ],
   'recomendaciones': [
     {id:'sec-recs', icon:'⭐', label:'Recomendaciones'},
+  ],
+  'testing': [
+    {id:'sec-testing', icon:'🛡️', label:'Protocolo de Testeo'},
   ]
 };
 
@@ -2523,7 +2605,7 @@ function updateStatusBar() {
     ...Object.values(PROYECTO_ETAPAS).flat(),
     ...EQUIPO_DATA, ...MONETIZACION_DATA, ...UPDATES_DATA, ...SERVER_CFG_DATA,
     ...CLIENT_CFG_DATA, ...SECURITY_DATA, ...EVENTS_DATA, ...OFFLINE_DATA,
-    ...ECONOMY_DATA, ...DISCORD_DATA, ...RECS_DATA
+    ...ECONOMY_DATA, ...DISCORD_DATA, ...RECS_DATA, ...BETA_TESTING_DATA
   ];
   const total = allItems.length;
   const done = allItems.filter(i => (state[i.id]||{}).status === 'done').length;
